@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { MainColor, Point } from "../style/Colors";
+import { MainColor, Point, PointHighlight } from "../style/Colors";
 import { useEffect, useRef, useState } from "react";
 
 const Wrapper = styled.div<{ hold: boolean }>`
@@ -32,7 +32,15 @@ const MenuLock = styled.div`
   padding: 0;
   margin: 0;
 `;
-const Chats = styled.div``;
+
+const Chats = styled.div`
+  padding: 50px 0 20px 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
 const MenueList = styled.div`
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
@@ -54,8 +62,27 @@ const Menu = styled.div`
   font-size: 24px;
   font-weight: bold;
   gap: 20px;
+  padding: 10px;
+  margin-left: -10px;
+  border-radius: 30px;
 
-  transition: 1s ease-in-out 0.2s;
+  transition: 0.5s ease-in-out 0.2s;
+  &:hover {
+    background-color: ${PointHighlight};
+    transition: 0.5s ease-in-out;
+  }
+`;
+
+const ChatTitle = styled.div<{ isExpanded: boolean }>`
+  display: flex;
+  height: 20px;
+  font-size: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  color: white;
+  font-family: "Chiron Sung HK";
+  opacity: ${({ isExpanded }) => (isExpanded ? 1 : 0)};
+  transition: opacity 0.5s ease;
 `;
 
 const Icon = styled.img`
@@ -110,9 +137,11 @@ const SideBar: React.FC = () => {
           <Icon src="/MenuHold.svg" alt="Toggle Sidebar" />
         </button>
       </MenuLock>
-      <Chats></Chats>
+      <Chats>
+        <ChatTitle isExpanded={isExpanded}>채팅</ChatTitle>
+      </Chats>
       <MenueList>
-        <Menu onClick={ () => window.open("https://www.law.go.kr/")}>
+        <Menu onClick={() => window.open("https://www.law.go.kr/")}>
           <Icon src="/Book.svg" />
           <span
             style={{
