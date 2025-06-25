@@ -21,4 +21,4 @@ jobs:
       - name: Copy dist to Nginx root
         run: |
           sudo rm -rf /home/ubuntu/MoleLaw_Frontend/dist/*
-          sudo cp -r dist/* /home/ubuntu/dist/
+          sudo cp -r dist/* /home/ubuntu/dist
