@@ -5,6 +5,9 @@ import ChattingBar from "../Components/ChattingBar";
 import { useState } from "react";
 import { Text } from "../style/Colors";
 import ChatBubble from "../Components/ChatBubble";
+import { useQuestionAPI } from "../store/states";
+import ReactMarkDown from "react-markdown";
+import InfoBubble from "../Components/InfoBubble";
 
 const Wrapper = styled.div`
   display: grid;
@@ -19,7 +22,7 @@ const Top = styled.div`
   padding-bottom: 0;
   box-sizing: border-box;
   gap: 10px;
-    height: fit-content;
+  height: fit-content;
 `;
 
 const Logo = styled.div`
@@ -42,7 +45,7 @@ const Middle = styled.div`
   flex-direction: column;
   gap: 10px;
 
-    /* 스크롤 숨기기 */
+  /* 스크롤 숨기기 */
   -ms-overflow-style: none; /* IE, Edge */
   scrollbar-width: none; /* Firefox */
 
@@ -75,17 +78,35 @@ const Bottom = styled.div`
 type Message = {
   role: "user" | "gpt";
   content: string;
+  type: "dialogue" | "info";
 };
 
 const MainView: React.FC = () => {
   const [messages, setMessage] = useState<Message[]>([]);
 
-  const addMessage = (msg: string) => {
+  const addMessage = (
+    msg: string,
+    role: "user" | "gpt",
+    type: "dialogue" | "info"
+  ) => {
     const newMessage: Message = {
-      role: messages.length % 2 === 0 ? "user" : "gpt",
+      role,
       content: msg,
+      type,
     };
     setMessage((prev) => [...prev, newMessage]);
+  };
+
+  const { askQuestion, loading, error } = useQuestionAPI();
+
+  const handleAsk = async (msg: string) => {
+    addMessage(msg, "user", "dialogue");
+    const res = await askQuestion(msg);
+    if (res) {
+      console.log(res.answer);
+      addMessage(res.answer, "gpt", "dialogue");
+      addMessage(res.info, "gpt", "info");
+    }
   };
 
   return (
@@ -107,31 +128,51 @@ const MainView: React.FC = () => {
           </button>
         </Top>
         <Middle>
-          {messages.length > 0 ? (
-            messages.map((msg, idx) => (
-              <div
-                key={idx}
-                style={{
-                  display: "flex",
-                  justifyContent:
-                    msg.role === "user" ? "flex-end" : "flex-start",
-                  padding: "8px 20px", width:"100%",
-                }}
-              >
-                <ChatBubble isUser={msg.role === "user"}>
-                  {msg.content}
-                </ChatBubble>
-              </div>
-            ))
-          ) : (
-            <ScreenSaver>
-              <img src="/PointCircle.svg" />
-              오늘의 고민은 무엇인가요?
-            </ScreenSaver>
-          )}
+          {messages.map((msg, idx) => {
+            if (msg.type === "dialogue") {
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    display: "flex",
+                    justifyContent:
+                      msg.role === "user" ? "flex-end" : "flex-start",
+                    padding: "8px 20px",
+                    width: "100%",
+                  }}
+                >
+                  <ChatBubble isUser={msg.role === "user"}>
+                    <ReactMarkDown>{msg.content}</ReactMarkDown>
+                  </ChatBubble>
+                </div>
+              );
+            } else {
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    padding: "8px 20px",
+                    width: "100%",
+                  }}
+                >
+                  <InfoBubble>
+                    <ReactMarkDown>{msg.content}</ReactMarkDown>
+                  </InfoBubble>{" "}
+                  {/* 별도 컴포넌트 */}
+                </div>
+              );
+            }
+          })}
         </Middle>
         <Bottom>
-          <ChattingBar onSubmit={addMessage} chatTrue={messages.length} />
+          <ChattingBar
+            onSubmit={(msg) => {
+              handleAsk(msg);
+            }}
+            chatTrue={messages.length}
+          />
         </Bottom>
       </Wrapper>
     </Background>
