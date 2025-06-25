@@ -12,6 +12,8 @@ const Wrapper = styled.div<{ isUser: boolean }>`
   padding: 10px 20px;
   border-radius: 20px;
   font-family: Pretendard-regular;
+
+  text-align: left;
 `;
 
 interface Props {

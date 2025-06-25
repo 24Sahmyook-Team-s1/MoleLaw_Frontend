@@ -8,6 +8,7 @@ import ChatBubble from "../Components/ChatBubble";
 import { useQuestionAPI } from "../store/states";
 import ReactMarkDown from "react-markdown";
 import InfoBubble from "../Components/InfoBubble";
+import { keyframes } from "@emotion/react";
 
 const Wrapper = styled.div`
   display: grid;
@@ -75,6 +76,26 @@ const Bottom = styled.div`
   height: fit-content;
 `;
 
+const dotFlashing = keyframes`
+  0%   { content: "검색중"; }
+  25%  { content: "검색중."; }
+  50%  { content: "검색중.."; }
+  75%  { content: "검색중..."; }
+  100% { content: "검색중"; }
+`;
+
+const LoadingText = styled.div`
+  font-family: "Pretendard", sans-serif;
+  font-size: 16px;
+  position: relative;
+
+  &::after {
+    content: "검색중";
+    animation: ${dotFlashing} 1.5s infinite steps(4);
+    white-space: pre;
+  }
+`;
+
 type Message = {
   role: "user" | "gpt";
   content: string;
@@ -97,7 +118,7 @@ const MainView: React.FC = () => {
     setMessage((prev) => [...prev, newMessage]);
   };
 
-  const { askQuestion } = useQuestionAPI();
+  const { askQuestion, loading } = useQuestionAPI();
 
   const handleAsk = async (msg: string) => {
     addMessage(msg, "user", "dialogue");
@@ -170,6 +191,16 @@ const MainView: React.FC = () => {
               <img src="/PointCircle.svg" />
               오늘의 고민은 무엇인가요?
             </ScreenSaver>
+          )}
+          {loading && (
+            <div
+            style={{
+              display:"flex",
+              justifyContent:"left",
+              width: "100%",
+              paddingBottom: "20px",
+            }}
+            ><LoadingText/></div>
           )}
         </Middle>
         <Bottom>

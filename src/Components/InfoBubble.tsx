@@ -3,6 +3,8 @@ import type { ReactNode } from "react";
 
 const Wrapper = styled.div`
   width: fit-content;
+  min-width: 90%;
+  max-width: 90%;
   height: fit-content;
   background-color: white;
 
