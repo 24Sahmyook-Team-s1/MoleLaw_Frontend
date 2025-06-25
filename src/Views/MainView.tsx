@@ -97,7 +97,7 @@ const MainView: React.FC = () => {
     setMessage((prev) => [...prev, newMessage]);
   };
 
-  const { askQuestion, loading, error } = useQuestionAPI();
+  const { askQuestion } = useQuestionAPI();
 
   const handleAsk = async (msg: string) => {
     addMessage(msg, "user", "dialogue");
@@ -128,43 +128,49 @@ const MainView: React.FC = () => {
           </button>
         </Top>
         <Middle>
-          {messages.map((msg, idx) => {
-            if (msg.type === "dialogue") {
-              return (
-                <div
-                  key={idx}
-                  style={{
-                    display: "flex",
-                    justifyContent:
-                      msg.role === "user" ? "flex-end" : "flex-start",
-                    padding: "8px 20px",
-                    width: "100%",
-                  }}
-                >
-                  <ChatBubble isUser={msg.role === "user"}>
-                    <ReactMarkDown>{msg.content}</ReactMarkDown>
-                  </ChatBubble>
-                </div>
-              );
-            } else {
-              return (
-                <div
-                  key={idx}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    padding: "8px 20px",
-                    width: "100%",
-                  }}
-                >
-                  <InfoBubble>
-                    <ReactMarkDown>{msg.content}</ReactMarkDown>
-                  </InfoBubble>{" "}
-                  {/* 별도 컴포넌트 */}
-                </div>
-              );
-            }
-          })}
+          {messages.length > 0 ? (
+            messages.map((msg, idx) => {
+              if (msg.type === "dialogue") {
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      display: "flex",
+                      justifyContent:
+                        msg.role === "user" ? "flex-end" : "flex-start",
+                      padding: "8px 20px",
+                      width: "100%",
+                    }}
+                  >
+                    <ChatBubble isUser={msg.role === "user"}>
+                      <ReactMarkDown>{msg.content}</ReactMarkDown>
+                    </ChatBubble>
+                  </div>
+                );
+              } else {
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      padding: "8px 20px",
+                      width: "100%",
+                    }}
+                  >
+                    <InfoBubble>
+                      <ReactMarkDown>{msg.content}</ReactMarkDown>
+                    </InfoBubble>
+                  </div>
+                );
+              }
+            })
+          ) : (
+            <ScreenSaver>
+              <img src="/PointCircle.svg" />
+              오늘의 고민은 무엇인가요?
+            </ScreenSaver>
+          )}
         </Middle>
         <Bottom>
           <ChattingBar
