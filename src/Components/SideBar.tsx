@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { MainColor, Point, PointHighlight } from "../style/Colors";
 import { useEffect, useRef, useState } from "react";
+import { useAuthStore } from "../store/states";
 
 const Wrapper = styled.div<{ hold: boolean }>`
   width: ${({ hold }) => (hold ? "400px" : "110px")};
@@ -96,6 +97,7 @@ const SideBar: React.FC = () => {
   const WidthRef = useRef<HTMLDivElement>(null);
   const [hold, setHold] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const {logout} = useAuthStore();
 
   const holdHandler = () => {
     if (!hold) {
@@ -169,7 +171,7 @@ const SideBar: React.FC = () => {
             Setting
           </span>
         </Menu>
-        <Menu>
+        <Menu onClick={logout}>
           <Icon src="/Profile.svg" />
           <span
             style={{
