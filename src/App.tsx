@@ -1,9 +1,42 @@
 import './App.css'
 import { Global } from '@emotion/react'
 import { GlobalStyles } from './style/GlobalStyle'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import routes from './Routes/Routes'
+import { BrowserRouter } from 'react-router-dom'
+import Router from './Routes'
+import { useEffect, useState, type ReactNode } from 'react'
+import { useAuthStore } from './store/states'
+import LoginPanel from './Components/LoginPanel'
 
+interface props{
+  children : ReactNode;
+}
+
+const ProtectedRoute:React.FC<props> = ({children}) => {
+  const {isAuthenticated, checkAuthStatus} = useAuthStore();
+  const [isChecking, setIsChecking] = useState(true);
+
+  useEffect(() => {
+    const verifyAuth = async () => {
+      await checkAuthStatus();
+      setIsChecking(false);
+    }
+    verifyAuth()
+  }, [checkAuthStatus])
+
+  if(isChecking) {
+    return <div className="flex h-screen items-center justify-center">인증 확인 중...</div>
+  }
+
+  if(!isAuthenticated){
+    return (
+      <>
+        <LoginPanel/>
+        {children}
+      </>
+  )}
+
+  return children;
+}
 
 function App() {
 
@@ -11,11 +44,9 @@ function App() {
     <>
       <Global styles={GlobalStyles} />
       <BrowserRouter>
-        <Routes>
-          {routes.map((route) => (
-            <Route key={route.name} path={route.path} element={route.element} />
-          ))}
-        </Routes>
+        <ProtectedRoute>
+          <Router/>
+        </ProtectedRoute>
       </BrowserRouter>
     </>
     )
