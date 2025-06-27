@@ -18,6 +18,7 @@ const ProtectedRoute:React.FC<props> = ({children}) => {
   useEffect(() => {
     const verifyAuth = async () => {
       await checkAuthStatus();
+      console.log("Checking")
       setIsChecking(false);
     }
     verifyAuth()

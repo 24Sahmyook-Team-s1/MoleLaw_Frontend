@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { MainColor, Point, PointHighlight } from "../style/Colors";
+import { MainColor, Point, PointHighlight, Text } from "../style/Colors";
 import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "../store/states";
 
@@ -10,6 +10,7 @@ const Wrapper = styled.div<{ hold: boolean }>`
   padding: 40px;
   padding-bottom: 20px;
   box-sizing: border-box;
+  color: ${Text};
 
   display: grid;
   grid-template-rows: auto 1fr auto;

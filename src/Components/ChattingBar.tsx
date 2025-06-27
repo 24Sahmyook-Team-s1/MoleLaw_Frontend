@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { useRef, useEffect, useState } from "react";
-import { Stroke } from "../style/Colors";
+import { Stroke, Text } from "../style/Colors";
 
 const Wrapper = styled.div<{ chatTrue: number }>`
   width: 1000px;
@@ -28,6 +28,8 @@ const ChatTextarea = styled.textarea`
   box-sizing: border-box;
   line-height: 1.5;
   font-family: pretendard-regular;
+  background-color: white;
+  color:${Text};
 `;
 
 const Submit = styled.button`
