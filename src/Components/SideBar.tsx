@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { MainColor, Point, PointHighlight, Text } from "../style/Colors";
 import { useEffect, useRef, useState } from "react";
-import { useAuthStore } from "../store/states";
+import ProfilePanel from "./ProfilePanel";
 
 const Wrapper = styled.div<{ hold: boolean }>`
   width: ${({ hold }) => (hold ? "400px" : "110px")};
@@ -98,7 +98,8 @@ const SideBar: React.FC = () => {
   const WidthRef = useRef<HTMLDivElement>(null);
   const [hold, setHold] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const {logout} = useAuthStore();
+
+  const [profileClick, setProfileClick] = useState(false);
 
   const holdHandler = () => {
     if (!hold) {
@@ -115,9 +116,7 @@ const SideBar: React.FC = () => {
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const width = entry.contentRect.width;
-        console.log("ResizeObserver");
         setIsExpanded(width >= 300);
-        console.log(isExpanded);
       }
     });
 
@@ -172,7 +171,8 @@ const SideBar: React.FC = () => {
             Setting
           </span>
         </Menu>
-        <Menu onClick={logout}>
+        <Menu style={{position: "relative"}}
+        onClick={() => setProfileClick((prev) => !prev)}>
           <Icon src="/Profile.svg" />
           <span
             style={{
@@ -185,6 +185,7 @@ const SideBar: React.FC = () => {
           >
             Profile
           </span>
+          {profileClick && (<ProfilePanel/>)}
         </Menu>
       </MenueList>
     </Wrapper>
