@@ -77,7 +77,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   //Auth Check
   checkAuthStatus: async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/users/me`, {
+      const response = await axios.get(`${API_BASE_URL}/auth/me`, {
         withCredentials: true,
       })
       if (response.status === 200){
