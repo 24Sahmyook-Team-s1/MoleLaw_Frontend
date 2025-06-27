@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Stroke } from "../style/Colors";
+import { Stroke, Text } from "../style/Colors";
 import { FcGoogle } from "react-icons/fc";
 import { useAuthStore } from "../store/states";
 
@@ -16,6 +16,7 @@ const Wrapper = styled.div`
     align-items: center;
 
     z-index: 1000;
+    color:${Text}
 `
 
 const Panel = styled.div`
@@ -84,6 +85,8 @@ const GoogleButton = styled.div`
     font-family: "pretendard";
     border: 1px solid #dadada;
     border-radius: 5px;
+
+    color:black;
 `
 const LoginPanel:React.FC = () => {
     const {googleLogin , kakaoLogin} = useAuthStore();
