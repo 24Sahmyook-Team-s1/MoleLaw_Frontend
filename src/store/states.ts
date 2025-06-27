@@ -2,8 +2,7 @@ import { create } from 'zustand';
 import axios, { AxiosError } from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const OAUTH2_URL = import.meta.env.VITE_OAUTH2_API_BASE_UTL;
-
+const OAUTH2_URL = import.meta.env.VITE_OAUTH2_BASE_URL;
 
 // AI API Function
 interface ResponseData {
