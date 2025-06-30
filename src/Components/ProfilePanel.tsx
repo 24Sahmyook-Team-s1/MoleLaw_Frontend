@@ -39,14 +39,18 @@ const ProfileText = styled.div`
     height: 50px;
     color:white;
     font-size: 15px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `
 
 const Name = styled.div`
-    
+    font-size: 21px;
 `
 
 const Email = styled.div`
-    
+    font-size: 12px;
 `
 
 const Logout = styled.div`
@@ -64,15 +68,15 @@ const LogoutButton= styled.button`
 `
 
 const ProfilePanel:React.FC = () => {
-    const {logout} = useAuthStore();
+    const {logout, user} = useAuthStore();
     
     return(
     <Wrapper>
         <Profile>
             <ProfilePhoto/>
             <ProfileText>
-                <Name>김재욱</Name>
-                <Email>yearsingle@gmail.com</Email>
+                <Name>{user?.nickname}</Name>
+                <Email>{user?.email}</Email>
             </ProfileText>
         </Profile>
         <Logout>
