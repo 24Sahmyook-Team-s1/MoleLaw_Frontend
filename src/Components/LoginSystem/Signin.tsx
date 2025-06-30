@@ -91,7 +91,7 @@ const LoginButton = styled.button`
 const SigninArea = styled.div`
     display: flex;
     flex-direction: column;
-
+    margin-top: 40px;
     transition: 0.4s ease-in-out;
 `
 
@@ -115,6 +115,7 @@ const Signin: React.FC<Props> = ({onArrowClick, handleSignup}) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const {LocalLogin} = useAuthStore();
+
 
   useEffect(() => {
     if (email) setPasswordRenderer(true);
@@ -140,7 +141,8 @@ const Signin: React.FC<Props> = ({onArrowClick, handleSignup}) => {
           backgroundColor: "transparent",
           width: "fit-content"
         }}
-        onClick={onArrowClick}
+        onClick={() => {
+          onArrowClick();}}
       >
         <FaArrowLeft color="black" display="block" />
       </button>
@@ -205,9 +207,10 @@ const Signin: React.FC<Props> = ({onArrowClick, handleSignup}) => {
           </Area>
         </AnimatedArea>
       )}
-      <SigninArea>
+      <SigninArea style={{fontFamily:"pretendard"}}>
         계정이 아직 없다면?
-      <SignUpText onClick={handleSignup}>회원가입</SignUpText>
+      <SignUpText onClick={() => {
+         handleSignup();}}>회원가입</SignUpText>
       </SigninArea>
     </Panel>
   );

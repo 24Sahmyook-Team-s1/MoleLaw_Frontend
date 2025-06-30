@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { FaArrowLeft } from "react-icons/fa";
-import { Text } from "../../style/Colors";
+import { MainColor, Sub, Text } from "../../style/Colors";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/states";
 
@@ -14,7 +14,6 @@ const Panel = styled.div`
   box-sizing: border-box;
   font-family: pretendard;
 `;
-
 
 const Area = styled.div`
   display: flex;
@@ -63,12 +62,53 @@ const SigninTitle = styled.div`
   padding-bottom: 50px;
 `;
 
+const TermsOfUse = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+  width: 300px;
+  justify-content: space-between;
+`;
+const TermsCheck = styled.input`
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background-color: white;
+  border: 1px solid black;
+
+  &:checked {
+    background-color: ${MainColor};
+    border: 1px solid black;
+  }
+`;
+const SignupButton = styled.button`
+  width: 300px;
+  height: 40px;
+  background-color: ${MainColor};
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Error = styled.span`
+  color: red;
+  font-size: 14px;
+`;
+
 const AnimatedArea = styled(Area)<{ show: boolean }>`
   opacity: ${({ show }) => (show ? 1 : 0)};
   transform: ${({ show }) => (show ? "translateY(0)" : "translateY(-10px)")};
   transition: opacity 0.4s ease-in-out,
     transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
+  margin: 0;
 `;
+
+function isValidEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
 interface props {
   handleSignin: () => void;
@@ -79,24 +119,41 @@ const Signup: React.FC<props> = ({ handleSignin }) => {
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
+  const [termsCheck, setTermsCheck] = useState(false);
+
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [termsError, setTermsError] = useState(false);
 
   const [render1, setRender1] = useState(false);
   const [render2, setRender2] = useState(false);
   const [render3, setRender3] = useState(false);
-    const [render4, setRender4] = useState(false);
+  const [render4, setRender4] = useState(false);
 
   const { LocalSignUp } = useAuthStore();
 
   useEffect(() => {
-    if(email) setRender1(true);
+    if (email) setRender1(true);
     else setRender1(false);
-    if(nickname) setRender2(true);
+    if (nickname) setRender2(true);
     else setRender2(false);
-    if(password) setRender3(true);
+    if (password) setRender3(true);
     else setRender3(false);
-    if(passwordCheck) setRender4(true);
+    if (passwordCheck) setRender4(true);
     else setRender4(false);
-  }, [email, nickname, password, passwordCheck])
+  }, [email, nickname, password, passwordCheck]);
+
+  const HandleSignup = () => {
+    if (email.length > 0 && !isValidEmail(email)) setEmailError(true);
+    else setEmailError(false);
+    if (password !== passwordCheck) setPasswordError(true);
+    else setPasswordError(false);
+    if (!termsCheck) setTermsError(true);
+    else setTermsError(false);
+
+    if (!emailError && !passwordError && !termsError)
+      LocalSignUp(email, password, nickname);
+  };
 
   return (
     <Panel>
@@ -124,7 +181,7 @@ const Signup: React.FC<props> = ({ handleSignin }) => {
       </Area>
       {email && (
         <AnimatedArea show={render1}>
-            <Area>
+          <Area>
             <InputArea>
               <InputAreaText>닉네임</InputAreaText>
               <InputAreaField
@@ -135,8 +192,7 @@ const Signup: React.FC<props> = ({ handleSignin }) => {
             </InputArea>
           </Area>
         </AnimatedArea>
-        )
-      }
+      )}
       {nickname && (
         <AnimatedArea show={render2}>
           <Area>
@@ -150,8 +206,7 @@ const Signup: React.FC<props> = ({ handleSignin }) => {
             </InputArea>
           </Area>
         </AnimatedArea>
-        )
-      }
+      )}
       {password && (
         <AnimatedArea show={render3}>
           <Area>
@@ -165,15 +220,29 @@ const Signup: React.FC<props> = ({ handleSignin }) => {
             </InputArea>
           </Area>
         </AnimatedArea>
-        )
-      }
+      )}
       {passwordCheck && (
-      <AnimatedArea show={render4}>
-        <Area>
-        <button onClick={() => LocalSignUp(email, password, nickname)}>회원가입</button>
-        </Area>
-      </AnimatedArea> 
-    )}
+        <AnimatedArea show={render4}>
+          <Area style={{ marginTop: "30px", boxSizing: "border-box" }}>
+            <TermsOfUse>
+              이용 약관 동의
+              <TermsCheck
+                type="checkbox"
+                checked={termsCheck}
+                onChange={(e) => setTermsCheck(e.target.checked)}
+              />
+            </TermsOfUse>
+            <SignupButton onClick={HandleSignup}>회원가입</SignupButton>
+            {emailError && <Error>이메일을 확인해주십쇼</Error>}
+            {passwordError && !emailError && (
+              <Error>입력된 비밀번호가 틀립니다</Error>
+            )}
+            {termsError && !passwordError && !emailError && (
+              <Error>이용 약관에 동의해주십쇼</Error>
+            )}
+          </Area>
+        </AnimatedArea>
+      )}
     </Panel>
   );
 };
