@@ -81,8 +81,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         withCredentials: true,
       })
       if (response.status === 200){
-        console.log("credential Available")
-        console.log(response.data.data);
         set ({
           user: response.data.data,
           isAuthenticated: true,

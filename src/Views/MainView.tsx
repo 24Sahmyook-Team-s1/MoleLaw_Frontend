@@ -5,7 +5,7 @@ import ChattingBar from "../Components/ChattingBar";
 import { useState } from "react";
 import { Text } from "../style/Colors";
 import ChatBubble from "../Components/ChatBubble";
-import { useQuestionAPI } from "../store/states";
+import { useAuthStore, useQuestionAPI } from "../store/states";
 import ReactMarkDown from "react-markdown";
 import InfoBubble from "../Components/InfoBubble";
 import { keyframes } from "@emotion/react";
@@ -77,6 +77,14 @@ const Bottom = styled.div`
   height: fit-content;
 `;
 
+const UserName= styled.span`
+  background: linear-gradient(90deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%);
+  background-clip: text;
+  color:transparent;
+  margin:0;
+  padding:0;
+`
+
 const dotFlashing = keyframes`
   0%   { content: "검색중"; }
   25%  { content: "검색중."; }
@@ -120,6 +128,7 @@ const MainView: React.FC = () => {
   };
 
   const { askQuestion, loading } = useQuestionAPI();
+  const {user} = useAuthStore();
 
   const handleAsk = async (msg: string) => {
     addMessage(msg, "user", "dialogue");
@@ -190,6 +199,7 @@ const MainView: React.FC = () => {
           ) : (
             <ScreenSaver>
               <img src="/PointCircle.svg" />
+              <UserName>{user?.nickname}님</UserName>
               오늘의 고민은 무엇인가요?
             </ScreenSaver>
           )}
