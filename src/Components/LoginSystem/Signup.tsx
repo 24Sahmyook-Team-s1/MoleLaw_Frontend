@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { FaArrowLeft } from "react-icons/fa";
-import { MainColor, Sub, Text } from "../../style/Colors";
+import { MainColor, Text } from "../../style/Colors";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/states";
 
