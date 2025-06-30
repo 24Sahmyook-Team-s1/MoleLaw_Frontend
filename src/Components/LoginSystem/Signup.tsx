@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { FaArrowLeft } from "react-icons/fa";
 import { Text } from "../../style/Colors";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/states";
 
 const Panel = styled.div`
@@ -63,6 +63,13 @@ const SigninTitle = styled.div`
   padding-bottom: 50px;
 `;
 
+const AnimatedArea = styled(Area)<{ show: boolean }>`
+  opacity: ${({ show }) => (show ? 1 : 0)};
+  transform: ${({ show }) => (show ? "translateY(0)" : "translateY(-10px)")};
+  transition: opacity 0.4s ease-in-out,
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+`;
+
 interface props {
   handleSignin: () => void;
 }
@@ -73,7 +80,23 @@ const Signup: React.FC<props> = ({ handleSignin }) => {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
 
+  const [render1, setRender1] = useState(false);
+  const [render2, setRender2] = useState(false);
+  const [render3, setRender3] = useState(false);
+    const [render4, setRender4] = useState(false);
+
   const { LocalSignUp } = useAuthStore();
+
+  useEffect(() => {
+    if(email) setRender1(true);
+    else setRender1(false);
+    if(nickname) setRender2(true);
+    else setRender2(false);
+    if(password) setRender3(true);
+    else setRender3(false);
+    if(passwordCheck) setRender4(true);
+    else setRender4(false);
+  }, [email, nickname, password, passwordCheck])
 
   return (
     <Panel>
@@ -100,48 +123,56 @@ const Signup: React.FC<props> = ({ handleSignin }) => {
         </InputArea>
       </Area>
       {email && (
-          <Area>
-          <InputArea>
-            <InputAreaText>닉네임</InputAreaText>
-            <InputAreaField
-              type="nickname"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-            />
-          </InputArea>
-        </Area>
+        <AnimatedArea show={render1}>
+            <Area>
+            <InputArea>
+              <InputAreaText>닉네임</InputAreaText>
+              <InputAreaField
+                type="nickname"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+              />
+            </InputArea>
+          </Area>
+        </AnimatedArea>
         )
       }
       {nickname && (
-        <Area>
-          <InputArea>
-            <InputAreaText>비밀번호</InputAreaText>
-            <InputAreaField
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </InputArea>
-        </Area>
+        <AnimatedArea show={render2}>
+          <Area>
+            <InputArea>
+              <InputAreaText>비밀번호</InputAreaText>
+              <InputAreaField
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </InputArea>
+          </Area>
+        </AnimatedArea>
         )
       }
       {password && (
-        <Area>
-          <InputArea>
-            <InputAreaText>비밀번호 확인</InputAreaText>
-            <InputAreaField
-              type="password"
-              value={passwordCheck}
-              onChange={(e) => setPasswordCheck(e.target.value)}
-            />
-          </InputArea>
-        </Area>
+        <AnimatedArea show={render3}>
+          <Area>
+            <InputArea>
+              <InputAreaText>비밀번호 확인</InputAreaText>
+              <InputAreaField
+                type="password"
+                value={passwordCheck}
+                onChange={(e) => setPasswordCheck(e.target.value)}
+              />
+            </InputArea>
+          </Area>
+        </AnimatedArea>
         )
       }
       {passwordCheck && (
-      <Area>
-      <button onClick={() => LocalSignUp(email, password, nickname)}>회원가입</button>
-      </Area> 
+      <AnimatedArea show={render4}>
+        <Area>
+        <button onClick={() => LocalSignUp(email, password, nickname)}>회원가입</button>
+        </Area>
+      </AnimatedArea> 
     )}
     </Panel>
   );
