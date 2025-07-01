@@ -5,8 +5,8 @@ import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuthStore } from "../../store/states";
 
 const Panel = styled.div`
-    width: 500px;
-    height: 600px;
+  width: 500px;
+  height: 600px;
   display: grid;
   grid-template-rows: auto auto auto auto auto 1fr;
 
@@ -89,33 +89,32 @@ const LoginButton = styled.button`
 `;
 
 const SigninArea = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-top: 40px;
-    transition: 0.4s ease-in-out;
-`
+  display: flex;
+  flex-direction: column;
+  margin-top: 40px;
+  transition: 0.4s ease-in-out;
+`;
 
 const SignUpText = styled.span`
-cursor: pointer;
-  &:hover{
+  cursor: pointer;
+  &:hover {
     color: ${Sub};
   }
-`
+`;
 
 interface Props {
-  onArrowClick  : () => void;
-  handleSignup : () => void;
+  onArrowClick: () => void;
+  handleSignup: () => void;
 }
 
-const Signin: React.FC<Props> = ({onArrowClick, handleSignup}) => {
+const Signin: React.FC<Props> = ({ onArrowClick, handleSignup }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRenderer, setPasswordRenderer] = useState(false);
   const [loginRenderer, setLoginRenderer] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const {LocalLogin} = useAuthStore();
-
+  const { LocalLogin } = useAuthStore();
 
   useEffect(() => {
     if (email) setPasswordRenderer(true);
@@ -131,7 +130,6 @@ const Signin: React.FC<Props> = ({onArrowClick, handleSignup}) => {
     setShowPassword((prev) => !prev);
   };
 
-
   return (
     <Panel>
       <button
@@ -139,10 +137,11 @@ const Signin: React.FC<Props> = ({onArrowClick, handleSignup}) => {
           padding: "5px",
           margin: "0",
           backgroundColor: "transparent",
-          width: "fit-content"
+          width: "fit-content",
         }}
         onClick={() => {
-          onArrowClick();}}
+          onArrowClick();
+        }}
       >
         <FaArrowLeft color="black" display="block" />
       </button>
@@ -180,6 +179,12 @@ const Signin: React.FC<Props> = ({onArrowClick, handleSignup}) => {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault(); // 줄바꿈 방지
+                      LocalLogin(email, password);
+                    }
+                  }}
                 />
                 <button
                   style={{
@@ -203,14 +208,21 @@ const Signin: React.FC<Props> = ({onArrowClick, handleSignup}) => {
       {password && (
         <AnimatedArea show={loginRenderer}>
           <Area>
-            <LoginButton onClick={() => LocalLogin(email, password)}>로그인</LoginButton>
+            <LoginButton onClick={() => LocalLogin(email, password)}>
+              로그인
+            </LoginButton>
           </Area>
         </AnimatedArea>
       )}
-      <SigninArea style={{fontFamily:"pretendard"}}>
+      <SigninArea style={{ fontFamily: "pretendard" }}>
         계정이 아직 없다면?
-      <SignUpText onClick={() => {
-         handleSignup();}}>회원가입</SignUpText>
+        <SignUpText
+          onClick={() => {
+            handleSignup();
+          }}
+        >
+          회원가입
+        </SignUpText>
       </SigninArea>
     </Panel>
   );
