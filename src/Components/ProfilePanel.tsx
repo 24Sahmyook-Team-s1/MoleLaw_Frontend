@@ -2,7 +2,7 @@ import styled from "@emotion/styled"
 import { Point } from "../style/Colors"
 import { useAuthStore } from "../store/states"
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{show:boolean}>`
     width: 305px;
     height: 130px;
     background-color: ${Point};
@@ -17,6 +17,10 @@ const Wrapper = styled.div`
     bottom: 50px;
     left: 10px;
     z-index: 500;
+
+    opacity: ${({show}) => show ? 1 : 0};
+    transition: opacity 0.5s ease-in-out;
+    pointer-events: ${({show}) => show ? "auto" : "none"};
 `
 
 const Profile = styled.div`
@@ -67,11 +71,15 @@ const LogoutButton= styled.button`
     color: white;
 `
 
-const ProfilePanel:React.FC = () => {
+interface Props {
+    show: boolean;
+}
+
+const ProfilePanel:React.FC<Props> = ({show}) => {
     const {logout, user} = useAuthStore();
     
     return(
-    <Wrapper>
+    <Wrapper show={show}>
         <Profile>
             <ProfilePhoto/>
             <ProfileText>

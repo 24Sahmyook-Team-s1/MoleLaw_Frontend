@@ -124,6 +124,11 @@ const SideBar: React.FC = () => {
     return () => observer.disconnect();
   }, [isExpanded]);
 
+  useEffect(() => {
+    if(!isExpanded) setProfileClick(false);
+  },[isExpanded])
+
+
   return (
     <Wrapper ref={WidthRef} hold={hold}>
       <MenuLock>
@@ -185,7 +190,7 @@ const SideBar: React.FC = () => {
           >
             Profile
           </span>
-          {profileClick && (<ProfilePanel/>)}
+          {isExpanded && (<ProfilePanel show={profileClick}/>)}
         </Menu>
       </MenueList>
     </Wrapper>
