@@ -86,11 +86,11 @@ const UserName= styled.span`
 `
 
 const dotFlashing = keyframes`
-  0%   { content: "검색중"; }
-  25%  { content: "검색중."; }
-  50%  { content: "검색중.."; }
-  75%  { content: "검색중..."; }
-  100% { content: "검색중"; }
+  0%   { content: "🔍 검색중"; }
+  25%  { content: "🔍 검색중."; }
+  50%  { content: "🔍 검색중.."; }
+  75%  { content: "🔍 검색중..."; }
+  100% { content: "🔍 검색중"; }
 `;
 
 const LoadingText = styled.div`
