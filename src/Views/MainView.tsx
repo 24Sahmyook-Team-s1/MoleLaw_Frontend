@@ -1,20 +1,20 @@
+import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import Background from "../Components/Background";
 import SideBar from "../Components/SideBar";
 import ChattingBar from "../Components/ChattingBar";
-import { useState } from "react";
-import { Text } from "../style/Colors";
 import ChatBubble from "../Components/ChatBubble";
+import InfoBubble from "../Components/InfoBubble";
 import { useAuthStore, useQuestionAPI } from "../store/states";
 import ReactMarkDown from "react-markdown";
-import InfoBubble from "../Components/InfoBubble";
+import { Text } from "../style/Colors";
 import { keyframes } from "@emotion/react";
 
 const Wrapper = styled.div`
   display: grid;
   grid-template-rows: auto 1fr auto;
   height: 100vh;
-  color:${Text};
+  color: ${Text};
 `;
 
 const Top = styled.div`
@@ -46,13 +46,11 @@ const Middle = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-
-  /* 스크롤 숨기기 */
-  -ms-overflow-style: none; /* IE, Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
+    display: none;
   }
 `;
 
@@ -63,7 +61,6 @@ const ScreenSaver = styled.div`
   flex-direction: column;
   height: 100%;
   width: 100%;
-
   font-family: "Chiron Sung HK";
   font-size: 32px;
   gap: 20px;
@@ -77,13 +74,18 @@ const Bottom = styled.div`
   height: fit-content;
 `;
 
-const UserName= styled.span`
-  background: linear-gradient(90deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%);
+const UserName = styled.span`
+  background: linear-gradient(
+    90deg,
+    rgba(42, 123, 155, 1) 0%,
+    rgba(87, 199, 133, 1) 50%,
+    rgba(237, 221, 83, 1) 100%
+  );
   background-clip: text;
-  color:transparent;
-  margin:0;
-  padding:0;
-`
+  color: transparent;
+  margin: 0;
+  padding: 0;
+`;
 
 const dotFlashing = keyframes`
   0%   { content: "검색중"; }
@@ -113,28 +115,26 @@ type Message = {
 
 const MainView: React.FC = () => {
   const [messages, setMessage] = useState<Message[]>([]);
+  const { askQuestion, loading } = useQuestionAPI();
+  const { checkAuthStatus, isAuthenticated, user } = useAuthStore();
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
 
   const addMessage = (
     msg: string,
     role: "user" | "gpt",
     type: "dialogue" | "info"
   ) => {
-    const newMessage: Message = {
-      role,
-      content: msg,
-      type,
-    };
+    const newMessage: Message = { role, content: msg, type };
     setMessage((prev) => [...prev, newMessage]);
   };
-
-  const { askQuestion, loading } = useQuestionAPI();
-  const {user} = useAuthStore();
 
   const handleAsk = async (msg: string) => {
     addMessage(msg, "user", "dialogue");
     const res = await askQuestion(msg);
     if (res) {
-      console.log(res.answer);
       addMessage(res.answer, "gpt", "dialogue");
       addMessage(res.info, "gpt", "info");
     }
@@ -146,6 +146,17 @@ const MainView: React.FC = () => {
       <Wrapper>
         <Top>
           <Logo>MoleLaw</Logo>
+
+          {isAuthenticated ? (
+            <div style={{ alignSelf: "center", fontSize: "14px" }}>
+              👋 {user?.nickname || "로그인 사용자"}님
+            </div>
+          ) : (
+            <div style={{ alignSelf: "center", fontSize: "14px" }}>
+              로그인 후 이용해주세요
+            </div>
+          )}
+
           <button
             style={{
               background: "none",
@@ -155,47 +166,44 @@ const MainView: React.FC = () => {
             }}
             onClick={() => window.location.reload()}
           >
-            <img src="/New Chat.svg"></img>
+            <img src="/New Chat.svg" />
           </button>
         </Top>
+
         <Middle>
           {messages.length > 0 ? (
-            messages.map((msg, idx) => {
-              if (msg.type === "dialogue") {
-                return (
-                  <div
-                    key={idx}
-                    style={{
-                      display: "flex",
-                      justifyContent:
-                        msg.role === "user" ? "flex-end" : "flex-start",
-                      padding: "8px 20px",
-                      width: "100%",
-                    }}
-                  >
-                    <ChatBubble isUser={msg.role === "user"}>
-                      <ReactMarkDown>{msg.content}</ReactMarkDown>
-                    </ChatBubble>
-                  </div>
-                );
-              } else {
-                return (
-                  <div
-                    key={idx}
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      padding: "8px 20px",
-                      width: "100%",
-                    }}
-                  >
-                    <InfoBubble>
-                      <ReactMarkDown>{msg.content}</ReactMarkDown>
-                    </InfoBubble>
-                  </div>
-                );
-              }
-            })
+            messages.map((msg, idx) =>
+              msg.type === "dialogue" ? (
+                <div
+                  key={idx}
+                  style={{
+                    display: "flex",
+                    justifyContent:
+                      msg.role === "user" ? "flex-end" : "flex-start",
+                    padding: "8px 20px",
+                    width: "100%",
+                  }}
+                >
+                  <ChatBubble isUser={msg.role === "user"}>
+                    <ReactMarkDown>{msg.content}</ReactMarkDown>
+                  </ChatBubble>
+                </div>
+              ) : (
+                <div
+                  key={idx}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    padding: "8px 20px",
+                    width: "100%",
+                  }}
+                >
+                  <InfoBubble>
+                    <ReactMarkDown>{msg.content}</ReactMarkDown>
+                  </InfoBubble>
+                </div>
+              )
+            )
           ) : (
             <ScreenSaver>
               <img src="/PointCircle.svg" />
@@ -203,17 +211,21 @@ const MainView: React.FC = () => {
               오늘의 고민은 무엇인가요?
             </ScreenSaver>
           )}
+
           {loading && (
             <div
-            style={{
-              display:"flex",
-              justifyContent:"left",
-              width: "100%",
-              paddingBottom: "20px",
-            }}
-            ><LoadingText/></div>
+              style={{
+                display: "flex",
+                justifyContent: "left",
+                width: "100%",
+                paddingBottom: "20px",
+              }}
+            >
+              <LoadingText />
+            </div>
           )}
         </Middle>
+
         <Bottom>
           <ChattingBar
             onSubmit={(msg) => {
