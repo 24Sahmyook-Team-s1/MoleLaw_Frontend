@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { FaArrowLeft } from "react-icons/fa";
-import { MainColor, Text } from "../../style/Colors";
+import { MainColor, Sub, Text } from "../../style/Colors";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/states";
 
@@ -69,6 +69,14 @@ const TermsOfUse = styled.div`
   width: 300px;
   justify-content: space-between;
 `;
+
+const TermsText = styled.a`
+  color:${Text};
+  &:hover{
+    color:${Sub}
+  }
+`
+
 const TermsCheck = styled.input`
   appearance: none;
   width: 20px;
@@ -112,9 +120,10 @@ function isValidEmail(email: string) {
 
 interface props {
   handleSignin: () => void;
+  terms: () => void;
 }
 
-const Signup: React.FC<props> = ({ handleSignin }) => {
+const Signup: React.FC<props> = ({ handleSignin, terms }) => {
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
@@ -225,7 +234,7 @@ const Signup: React.FC<props> = ({ handleSignin }) => {
         <AnimatedArea show={render4}>
           <Area style={{ marginTop: "30px", boxSizing: "border-box" }}>
             <TermsOfUse>
-              이용 약관 동의
+              <TermsText onClick={terms}>이용 약관(개인정보 수집 및 이용) 동의</TermsText>
               <TermsCheck
                 type="checkbox"
                 checked={termsCheck}
