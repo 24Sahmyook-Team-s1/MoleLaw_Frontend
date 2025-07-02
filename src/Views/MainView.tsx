@@ -2,10 +2,10 @@ import styled from "@emotion/styled";
 import Background from "../Components/Background";
 import SideBar from "../Components/SideBar";
 import ChattingBar from "../Components/ChattingBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text } from "../style/Colors";
 import ChatBubble from "../Components/ChatBubble";
-import { useAuthStore, useQuestionAPI } from "../store/states";
+import { useAuthStore, useDataStore, useQuestionAPI } from "../store/states";
 import ReactMarkDown from "react-markdown";
 import InfoBubble from "../Components/InfoBubble";
 import { keyframes } from "@emotion/react";
@@ -15,6 +15,8 @@ const Wrapper = styled.div`
   grid-template-rows: auto 1fr auto;
   height: 100vh;
   color:${Text};
+
+  user-select: none;
 `;
 
 const Top = styled.div`
@@ -113,6 +115,11 @@ type Message = {
 
 const MainView: React.FC = () => {
   const [messages, setMessage] = useState<Message[]>([]);
+  const { getChatRoom } = useDataStore();
+
+  useEffect(() => {
+    getChatRoom();
+  }, [getChatRoom]);
 
   const addMessage = (
     msg: string,
@@ -133,7 +140,7 @@ const MainView: React.FC = () => {
   const handleAsk = async (msg: string) => {
     addMessage(msg, "user", "dialogue");
     const res = await askQuestion(msg);
-    if (res) {
+    if (res) {  
       console.log(res.answer);
       addMessage(res.answer, "gpt", "dialogue");
       addMessage(res.info, "gpt", "info");
