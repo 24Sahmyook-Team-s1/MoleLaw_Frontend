@@ -2,10 +2,15 @@ import styled from "@emotion/styled";
 import Background from "../Components/Background";
 import SideBar from "../Components/SideBar";
 import ChattingBar from "../Components/ChattingBar";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Text } from "../style/Colors";
 import ChatBubble from "../Components/ChatBubble";
-import { useAuthStore, useDataStore, useQuestionAPI } from "../store/states";
+import {
+  useAuthStore,
+  useDataStore,
+  useMessageStore,
+  useQuestionAPI,
+} from "../store/states";
 import ReactMarkDown from "react-markdown";
 import InfoBubble from "../Components/InfoBubble";
 import { keyframes } from "@emotion/react";
@@ -14,7 +19,7 @@ const Wrapper = styled.div`
   display: grid;
   grid-template-rows: auto 1fr auto;
   height: 100vh;
-  color:${Text};
+  color: ${Text};
 
   user-select: none;
   box-sizing: border-box;
@@ -80,13 +85,18 @@ const Bottom = styled.div`
   height: fit-content;
 `;
 
-const UserName= styled.span`
-  background: linear-gradient(90deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%);
+const UserName = styled.span`
+  background: linear-gradient(
+    90deg,
+    rgba(42, 123, 155, 1) 0%,
+    rgba(87, 199, 133, 1) 50%,
+    rgba(237, 221, 83, 1) 100%
+  );
   background-clip: text;
-  color:transparent;
-  margin:0;
-  padding:0;
-`
+  color: transparent;
+  margin: 0;
+  padding: 0;
+`;
 
 const dotFlashing = keyframes`
   0%   { content: "🔍 검색중"; }
@@ -108,44 +118,20 @@ const LoadingText = styled.div`
   }
 `;
 
-type Message = {
-  role: "user" | "gpt";
-  content: string;
-  type: "dialogue" | "info";
-};
-
 const MainView: React.FC = () => {
-  const [messages, setMessage] = useState<Message[]>([]);
   const { getChatRoom } = useDataStore();
+  const { messageData, addMessage } = useMessageStore();
+  const { askQuestion, loading } = useQuestionAPI();
+  const { user } = useAuthStore();
 
   useEffect(() => {
     getChatRoom();
   }, [getChatRoom]);
 
-  const addMessage = (
-    msg: string,
-    role: "user" | "gpt",
-    type: "dialogue" | "info"
-  ) => {
-    const newMessage: Message = {
-      role,
-      content: msg,
-      type,
-    };
-    setMessage((prev) => [...prev, newMessage]);
-  };
-
-  const { askQuestion, loading } = useQuestionAPI();
-  const {user} = useAuthStore();
-
   const handleAsk = async (msg: string) => {
-    addMessage(msg, "user", "dialogue");
-    const res = await askQuestion(msg);
-    if (res) {  
-      console.log(res.answer);
-      addMessage(res.answer, "gpt", "dialogue");
-      addMessage(res.info, "gpt", "info");
-    }
+    addMessage({sender: "USER", content: msg });
+    await askQuestion(msg);
+    getChatRoom();
   };
 
   return (
@@ -167,21 +153,21 @@ const MainView: React.FC = () => {
           </button>
         </Top>
         <Middle>
-          {messages.length > 0 ? (
-            messages.map((msg, idx) => {
-              if (msg.type === "dialogue") {
+          {messageData?.messages?.length ?? 0 > 0 ? (
+            messageData!.messages.map((msg, idx) => {
+              if (msg.sender === "USER" || msg.sender === "BOT") {
                 return (
                   <div
                     key={idx}
                     style={{
                       display: "flex",
                       justifyContent:
-                        msg.role === "user" ? "flex-end" : "flex-start",
+                        msg.sender === "USER" ? "flex-end" : "flex-start",
                       padding: "8px 20px",
                       width: "100%",
                     }}
                   >
-                    <ChatBubble isUser={msg.role === "user"}>
+                    <ChatBubble isUser={msg.sender === "USER"}>
                       <ReactMarkDown>{msg.content}</ReactMarkDown>
                     </ChatBubble>
                   </div>
@@ -213,22 +199,19 @@ const MainView: React.FC = () => {
           )}
           {loading && (
             <div
-            style={{
-              display:"flex",
-              justifyContent:"left",
-              width: "100%",
-              paddingBottom: "20px",
-            }}
-            ><LoadingText/></div>
+              style={{
+                display: "flex",
+                justifyContent: "left",
+                width: "100%",
+                paddingBottom: "20px",
+              }}
+            >
+              <LoadingText />
+            </div>
           )}
         </Middle>
         <Bottom>
-          <ChattingBar
-            onSubmit={(msg) => {
-              handleAsk(msg);
-            }}
-            chatTrue={messages.length}
-          />
+          <ChattingBar onSubmit={(msg) => handleAsk(msg)} chatTrue={messageData!.messages.length} />
         </Bottom>
       </Wrapper>
     </Background>

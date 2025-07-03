@@ -204,7 +204,7 @@ interface Props {
 }
 
 const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
-  const { user } = useAuthStore();
+  const { user, quit } = useAuthStore();
 
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
@@ -319,9 +319,9 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
           </AnimatedInputArea>
           <OptionStyle>
             회원 탈퇴
-            <ChangeButton style={{ backgroundColor: "Red" }}>
+            <ChangeButton style={{ backgroundColor: "Red" }} onClick={quit}>
               {" "}
-              변경{" "}
+              탈퇴{" "}
             </ChangeButton>
           </OptionStyle>
         </AccountArea>

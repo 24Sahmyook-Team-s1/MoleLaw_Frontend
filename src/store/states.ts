@@ -4,18 +4,55 @@ import axios, { AxiosError } from "axios";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const OAUTH2_URL = import.meta.env.VITE_OAUTH2_BASE_URL;
 
-// AI API Function
-interface ResponseData {
-  answer: string;
-  info: string;
+interface Message {
+  sender: "USER" | "BOT" | "INFO";
+  content: string;
+}
+
+interface MessageContainer {
+  id: number;
+  messages: Message[];
+}
+
+interface MessageData {
+  messageData: MessageContainer | null;
+  addMessage: (msg:Message) => void;
+  setMessages: (msgs: MessageContainer) => void;
+}
+
+interface Chatroom{
+  id: number,
+  title: string,
+  preview: string,
+  createdAt: string,
+}
+
+interface DataStore {
+  chatRooms: Chatroom[];
+  getChatRoom: () => void;
+  getChatRoomMessage: (ChatRoomID:number) => Promise<boolean | undefined>;
+
+  selectedChatRoomID: number |null;
+  setSelectedRoomID: (id:number) => void;
 }
 
 interface QuestionStore {
-  response: ResponseData | null;
+  response: Message | null;
   loading: boolean;
   error: string | null;
-  askQuestion: (query: string) => Promise<ResponseData | null>; // ✅ 응답 반환하도록 수정
+  askQuestion: (content: string) => Promise<void>; // ✅ 응답 반환하도록 수정
 }
+
+export const useMessageStore = create<MessageData>((set) => ({
+    messageData: null,
+  addMessage: (msg) =>
+    set((state) => ({
+      messageData: state.messageData ? {
+        ...state.messageData, messages: [...state.messageData.messages, msg],
+      } : null,
+    })),
+  setMessages: (msgs) => set({ messageData: msgs }),
+}))
 
 export const useQuestionAPI = create<QuestionStore>((set) => ({
   response: null,
@@ -26,36 +63,57 @@ export const useQuestionAPI = create<QuestionStore>((set) => ({
     set({ loading: true, error: null });
 
     try {
-      const res = await axios.post<ResponseData>(
+      const res = await axios.post<{id: number; messages: Message[];}>(
         `${API_BASE_URL}/chat-rooms/first-message`,
         { content },
         { withCredentials: true }
       );
-
-      console.log(res.data);
-
-      const data = res.data;
-      set({ response: data, loading: false });
-      return data; // ✅ 응답 반환
+      if (res.status === 200){
+        console.log(res.data);
+        const data = res.data;
+        const messages = data.messages;
+        useMessageStore.getState().setMessages(message);
+        set({loading:false})
+      }
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       set({
         error: error.response?.data?.message || "질문 처리 중 오류 발생",
         loading: false,
-      });
-      return null; // ✅ 실패 시 null 반환
+      }); // ✅ 실패 시 null 반환
     }
   },
+
+  continueQuestion: async (content: string) => {
+    set({ loading: true, error: null});
+
+    try{
+      const selectedRoom = useDataStore.getState().selectedChatRoomID;
+      const res = await axios.post<{id: number; messages: Message[];}>(
+        `${API_BASE_URL}/chat-rooms/${selectedRoom}/messages`,
+        { content },
+        { withCredentials: true}
+      );
+      if (res.status === 200) {
+        const messages = res.data.messages;
+        useMessageStore.getState().setMessages(messages);
+        set({loading: false});
+      }
+    } catch (err) {
+      const error = err as AxiosError<{message?: string}>
+      set({
+        error: error.response?.data?.message || "질문 처리 중 오류 발생",
+        loading: false,
+      })
+    }
+  }
 }));
 
-interface DataStore {
-  chatRooms: JSON;
-  getChatRoom: () => void;
-}
-
 export const useDataStore = create<DataStore>((set) => ({
-  chatRooms: JSON,
+  chatRooms: [],
+  selectedChatRoomID: null,
 
+  setSelectedRoomID: (id: number) => set({ selectedChatRoomID: id}),  
   //getChatRoom
   getChatRoom: async () => {
     try {
@@ -74,6 +132,28 @@ export const useDataStore = create<DataStore>((set) => ({
       set({
         chatRooms: undefined,
       });
+      return false;
+    }
+  },
+
+  getChatRoomMessage: async (ChatRoomID: number) => {
+    try {
+      const res = await axios.get(
+        `${API_BASE_URL}/chat-rooms/${ChatRoomID}`,
+        {
+          withCredentials: true,
+        }
+      );
+      if (res.status === 200) {
+        const messages = res.data.messages;
+        useMessageStore.getState().setMessages(messages);
+        set({selectedChatRoomID: ChatRoomID});
+        console.log(res.data);
+        return true;
+      }
+    } catch (error) {
+      console.log(error);
+      return false;
     }
   },
 }));
@@ -96,6 +176,7 @@ interface AuthStore {
     password: string,
     nickname: string
   ) => Promise<void>;
+  quit: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
@@ -150,6 +231,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         user: res.data,
         isLoading: false,
       });
+
+      location.reload();
     } catch (error) {
       console.log(error);
       set({ isLoading: false });
@@ -209,4 +292,18 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       return false;
     }
   },
+
+  quit: async () => {
+    try{
+      await axios.delete(
+        `${API_BASE_URL}/auth/me`,
+        {
+          withCredentials: true,
+        }
+      );
+      set({ user: null, isAuthenticated: false });
+    } catch (error) {
+      console.error("로그아웃 오류:", error);
+    }
+  }
 }));

@@ -120,7 +120,7 @@ const SideBar: React.FC = () => {
   const [settingRenderer, setSettingRenderer] = useState(false);
 
   const [profileClick, setProfileClick] = useState(false);
-  const {chatRooms} = useDataStore();
+  const {chatRooms, getChatRoomMessage} = useDataStore();
 
   const holdHandler = () => {
     if (!hold) {
@@ -129,6 +129,10 @@ const SideBar: React.FC = () => {
       setHold(false);
     }
   };
+
+  const ChatRoomHandler = (ID:number) =>{
+    getChatRoomMessage(ID);
+  }
 
   useEffect(() => {
     const el = WidthRef.current;
@@ -173,7 +177,7 @@ const SideBar: React.FC = () => {
         <ChatTitle isExpanded={isExpanded}>채팅</ChatTitle>
           
           {Array.isArray(chatRooms) && chatRooms.map((room, index) => (
-            <ChatList show={isExpanded} key={room.id || index}>
+            <ChatList show={isExpanded} key={room.id || index} onClick={() => ChatRoomHandler(room.id)}>
               {room.title}
             </ChatList>
           ))}
