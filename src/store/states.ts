@@ -60,11 +60,11 @@ interface AuthStore {
   googleLogin: () => void;
   kakaoLogin: () => void;
   logout: () => Promise<boolean>;
-
-
+  LocalLogin: (email: string, password: string) => Promise<void>;
+  LocalSignUp: (email: string, password: string, nickname: string) => Promise<void>;
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
+export const useAuthStore = create<AuthStore>((set, get) => ({
 
   user:null,
   isLoading: false,
@@ -81,10 +81,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
         withCredentials: true,
       })
       if (response.status === 200){
-        console.log("credential Available")
         set ({
-          user: response.data,
+          user: response.data.data,
           isAuthenticated: true,
+          isLoading: false,
         })
         return true
       }
@@ -93,9 +93,63 @@ export const useAuthStore = create<AuthStore>((set) => ({
       set({
         user: null,
         isAuthenticated: false,
+        isLoading: false,
       })
   }
   return false
+  },
+
+  LocalSignUp: async (email: string, password: string, nickname: string) => {
+    set({ isLoading: true });
+    try {
+      const res = await axios.post(
+        `${API_BASE_URL}/auth/signup`,
+        {
+          email,
+          password,
+          nickname,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      // 쿠키에 JWT가 저장되었으니, 로그인 상태 확인
+      const success = await get().checkAuthStatus();
+
+      if (success) {
+        // ✅ 회원가입 성공 + 로그인 상태 → 채팅 화면으로 이동
+        window.location.href = "/Main";
+      }
+
+      set({ isLoading: false });
+    } catch (error) {
+      console.log(error);
+      set({ isLoading: false });
+    }
+  },
+
+
+  LocalLogin: async (email:string, password:string) => {
+    set({ isLoading: true });
+    try {
+        await axios.post(
+        `${API_BASE_URL}/auth/login`,
+        {
+          email: email,  
+          password: password,
+        },
+        {
+          withCredentials: true, 
+        }
+      );
+
+      // 로그인 성공 시 처리
+      await get().checkAuthStatus();
+    } catch (error) {
+      console.error("로그인 실패", error);
+      set({ isLoading: false });
+    }
   },
 
   //구글 로그인
@@ -116,7 +170,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   logout: async() => {
     try{
       await axios.post(
-        `${API_BASE_URL}/api/auth/logout`,{},
+        `${API_BASE_URL}/auth/logout`,{},
         {
           withCredentials: true,
         },
