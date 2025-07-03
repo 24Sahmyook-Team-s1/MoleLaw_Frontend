@@ -7,12 +7,15 @@ import { useState } from "react";
 import { FaEye, FaEyeSlash, FaRegSave } from "react-icons/fa";
 
 const Panel = styled.div<{ show: boolean }>`
-  position: absolute;
+  position: fixed;
   width: 100vw;
   height: 100vh;
-
+  box-sizing: border-box;
+  overflow: hidden;
   pointer-events: ${({ show }) => (show ? "auto" : "none")};
   z-index: 2;
+  padding:0;
+  margin: 0;
 `;
 
 const Wrapper = styled.div<{ show: boolean }>`
@@ -27,6 +30,7 @@ const Wrapper = styled.div<{ show: boolean }>`
   border-radius: 10px;
   border: 1px solid ${Stroke};
   box-shadow: 0px 7px 10px #535353;
+  box-sizing: border-box;
 
   background-color: #ffffff6e;
   backdrop-filter: blur(20px);
@@ -131,7 +135,7 @@ const TermsOfUse = styled.div`
   overflow-y: scroll;
   overflow-x: hidden;
 
-  box-sizing: content-box;
+  box-sizing: border-box;
   padding-right: 10px;
 
   text-align: left;

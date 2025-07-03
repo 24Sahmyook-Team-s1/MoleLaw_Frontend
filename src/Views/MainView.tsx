@@ -17,6 +17,7 @@ const Wrapper = styled.div`
   color:${Text};
 
   user-select: none;
+  box-sizing: border-box;
 `;
 
 const Top = styled.div`
