@@ -99,29 +99,36 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   return false
   },
 
-  LocalSignUp: async (email:string, password:string, nickname:string) => {
+  LocalSignUp: async (email: string, password: string, nickname: string) => {
     set({ isLoading: true });
     try {
-        const res = await axios.post(
+      const res = await axios.post(
         `${API_BASE_URL}/auth/signup`,
         {
-          email:email,
-          password: password,
-          nickname: nickname,
+          email,
+          password,
+          nickname,
         },
         {
           withCredentials: true,
         }
-      )
-      set({
-        user: res.data,
-        isLoading: false,
-      })
-    } catch (error){
+      );
+
+      // 쿠키에 JWT가 저장되었으니, 로그인 상태 확인
+      const success = await get().checkAuthStatus();
+
+      if (success) {
+        // ✅ 회원가입 성공 + 로그인 상태 → 채팅 화면으로 이동
+        window.location.href = "/Main";
+      }
+
+      set({ isLoading: false });
+    } catch (error) {
       console.log(error);
-      set({isLoading:false});
+      set({ isLoading: false });
     }
   },
+
 
   LocalLogin: async (email:string, password:string) => {
     set({ isLoading: true });

@@ -9,6 +9,7 @@ import { useAuthStore, useQuestionAPI } from "../store/states";
 import ReactMarkDown from "react-markdown";
 import { Text } from "../style/Colors";
 import { keyframes } from "@emotion/react";
+import axios from "axios";
 
 const Wrapper = styled.div`
   display: grid;
@@ -19,7 +20,7 @@ const Wrapper = styled.div`
 
 const Top = styled.div`
   display: grid;
-  grid-template-columns: auto auto 1fr;
+  grid-template-columns: auto auto 1fr auto;
   padding: 20px 40px;
   padding-bottom: 0;
   box-sizing: border-box;
@@ -140,6 +141,22 @@ const MainView: React.FC = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm("정말로 회원을 탈퇴하시겠습니까?");
+    if (!confirmed) return;
+
+    try {
+      await axios.delete("/api/auth/me", {
+        withCredentials: true,
+      });
+      alert("탈퇴가 완료되었습니다.");
+      window.location.href = "/";
+    } catch (error) {
+      console.error("탈퇴 중 오류:", error);
+      alert("탈퇴 중 오류가 발생했습니다.");
+    }
+  };
+
   return (
     <Background>
       <SideBar />
@@ -168,6 +185,25 @@ const MainView: React.FC = () => {
           >
             <img src="/New Chat.svg" />
           </button>
+
+          {/* ✅ 회원탈퇴 버튼 추가 */}
+          {isAuthenticated && (
+            <button
+              onClick={handleDeleteAccount}
+              style={{
+                background: "none",
+                border: "1px solid red",
+                color: "red",
+                padding: "6px 10px",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontSize: "13px",
+                alignSelf: "center",
+              }}
+            >
+              회원 탈퇴
+            </button>
+          )}
         </Top>
 
         <Middle>
