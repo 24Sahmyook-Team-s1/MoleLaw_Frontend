@@ -120,7 +120,7 @@ const LoadingText = styled.div`
 
 const MainView: React.FC = () => {
   const { getChatRoom } = useDataStore();
-  const { messageData, addMessage } = useMessageStore();
+  const { messages, addMessage } = useMessageStore();
   const { askQuestion, loading } = useQuestionAPI();
   const { user } = useAuthStore();
 
@@ -153,8 +153,8 @@ const MainView: React.FC = () => {
           </button>
         </Top>
         <Middle>
-          {messageData?.messages?.length ?? 0 > 0 ? (
-            messageData!.messages.map((msg, idx) => {
+          {messages?.length > 0 ? (
+            messages.map((msg, idx) => {
               if (msg.sender === "USER" || msg.sender === "BOT") {
                 return (
                   <div
@@ -211,7 +211,7 @@ const MainView: React.FC = () => {
           )}
         </Middle>
         <Bottom>
-          <ChattingBar onSubmit={(msg) => handleAsk(msg)} chatTrue={messageData!.messages.length} />
+          <ChattingBar onSubmit={(msg) => handleAsk(msg)} chatTrue={messages?.length || 0} />
         </Bottom>
       </Wrapper>
     </Background>

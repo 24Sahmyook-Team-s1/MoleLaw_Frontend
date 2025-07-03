@@ -9,15 +9,11 @@ interface Message {
   content: string;
 }
 
-interface MessageContainer {
-  id: number;
-  messages: Message[];
-}
-
 interface MessageData {
-  messageData: MessageContainer | null;
+  messages: Message[];
   addMessage: (msg:Message) => void;
-  setMessages: (msgs: MessageContainer) => void;
+  addMessages: (msgs:Message[]) => void;
+  setMessages: (msgs: Message[]) => void;
 }
 
 interface Chatroom{
@@ -44,14 +40,16 @@ interface QuestionStore {
 }
 
 export const useMessageStore = create<MessageData>((set) => ({
-    messageData: null,
+    messages: [],
   addMessage: (msg) =>
     set((state) => ({
-      messageData: state.messageData ? {
-        ...state.messageData, messages: [...state.messageData.messages, msg],
-      } : null,
+      messages: [...state.messages, msg],
     })),
-  setMessages: (msgs) => set({ messageData: msgs }),
+
+  addMessages: (msgs) => set((state) => ({
+    messages: [...state.messages, ...msgs],
+  })),
+  setMessages: (msgs) => set({ messages: msgs }),
 }))
 
 export const useQuestionAPI = create<QuestionStore>((set) => ({
@@ -72,7 +70,7 @@ export const useQuestionAPI = create<QuestionStore>((set) => ({
         console.log(res.data);
         const data = res.data;
         const messages = data.messages;
-        useMessageStore.getState().setMessages(message);
+        useMessageStore.getState().setMessages(messages);
         set({loading:false})
       }
     } catch (err) {
@@ -96,7 +94,7 @@ export const useQuestionAPI = create<QuestionStore>((set) => ({
       );
       if (res.status === 200) {
         const messages = res.data.messages;
-        useMessageStore.getState().setMessages(messages);
+        useMessageStore.getState().addMessages(messages);
         set({loading: false});
       }
     } catch (err) {
@@ -145,7 +143,7 @@ export const useDataStore = create<DataStore>((set) => ({
         }
       );
       if (res.status === 200) {
-        const messages = res.data.messages;
+        const messages = res.data.messages === undefined ? res.data : res.data.messages
         useMessageStore.getState().setMessages(messages);
         set({selectedChatRoomID: ChatRoomID});
         console.log(res.data);
