@@ -37,6 +37,7 @@ interface QuestionStore {
   loading: boolean;
   error: string | null;
   askQuestion: (content: string) => Promise<void>; // ✅ 응답 반환하도록 수정
+  continueQuestion: (content: string) => Promise<void>;
 }
 
 export const useMessageStore = create<MessageData>((set) => ({
@@ -87,14 +88,13 @@ export const useQuestionAPI = create<QuestionStore>((set) => ({
 
     try{
       const selectedRoom = useDataStore.getState().selectedChatRoomID;
-      const res = await axios.post<{id: number; messages: Message[];}>(
+      const res = await axios.post<Message>(
         `${API_BASE_URL}/chat-rooms/${selectedRoom}/messages`,
         { content },
         { withCredentials: true}
       );
       if (res.status === 200) {
-        const messages = res.data.messages;
-        useMessageStore.getState().addMessages(messages);
+        useMessageStore.getState().addMessage(res.data);
         set({loading: false});
       }
     } catch (err) {

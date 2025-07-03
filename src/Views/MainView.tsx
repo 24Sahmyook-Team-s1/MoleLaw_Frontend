@@ -119,9 +119,9 @@ const LoadingText = styled.div`
 `;
 
 const MainView: React.FC = () => {
-  const { getChatRoom } = useDataStore();
+  const { getChatRoom, selectedChatRoomID } = useDataStore();
   const { messages, addMessage } = useMessageStore();
-  const { askQuestion, loading } = useQuestionAPI();
+  const { askQuestion, loading, continueQuestion } = useQuestionAPI();
   const { user } = useAuthStore();
 
   useEffect(() => {
@@ -129,8 +129,14 @@ const MainView: React.FC = () => {
   }, [getChatRoom]);
 
   const handleAsk = async (msg: string) => {
-    addMessage({sender: "USER", content: msg });
-    await askQuestion(msg);
+    addMessage({ sender: "USER", content: msg });
+
+
+    if (selectedChatRoomID) {
+      await continueQuestion(msg);
+    } else {
+      await askQuestion(msg);
+    }
     getChatRoom();
   };
 
@@ -211,7 +217,10 @@ const MainView: React.FC = () => {
           )}
         </Middle>
         <Bottom>
-          <ChattingBar onSubmit={(msg) => handleAsk(msg)} chatTrue={messages?.length || 0} />
+          <ChattingBar
+            onSubmit={(msg) => handleAsk(msg)}
+            chatTrue={messages?.length || 0}
+          />
         </Bottom>
       </Wrapper>
     </Background>
