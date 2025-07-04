@@ -230,7 +230,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         isLoading: false,
       });
 
-      location.reload();
+      window.location.reload();
     } catch (error) {
       console.log(error);
       set({ isLoading: false });
