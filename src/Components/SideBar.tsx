@@ -38,11 +38,16 @@ const MenuLock = styled.div`
 `;
 
 const Chats = styled.div`
-  padding: 50px 0 20px 0;
+  padding: 50px 30px 20px 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
+
+  min-width: 0;
+  overflow: hidden;
+  width: 350px;
+
 `;
 
 const MenueList = styled.div`
@@ -99,7 +104,11 @@ const Icon = styled.img`
 
 const ChatList = styled.div<{show:boolean}>`
   width: 100%;
-  height: 24px;
+  height: fit-content;
+  min-width: 0;
+  padding: 5px;
+  border-radius: 10px;
+  box-sizing: border-box;
 
   color: white;
   font-size: 14px;
@@ -111,6 +120,12 @@ const ChatList = styled.div<{show:boolean}>`
 
   text-align: left;
   user-select: none;
+  cursor: pointer;
+
+  &:hover{
+    background-color: ${PointHighlight};
+
+  }
 `
 
 const SideBar: React.FC = () => {
