@@ -48,6 +48,7 @@ const CheckButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+  color: white;
 `;
 
 const TermsOfUseText = `

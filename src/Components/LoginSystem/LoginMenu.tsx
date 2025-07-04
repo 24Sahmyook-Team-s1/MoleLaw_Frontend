@@ -82,6 +82,7 @@ const LocalLogin = styled.div`
   align-items: center;
   background-color: ${Sub};
   border-radius: 5px;
+  color: white;
 
   font-size: 14px;
   font-family: "pretendard";

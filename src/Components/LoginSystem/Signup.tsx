@@ -98,6 +98,7 @@ const SignupButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+  color: white;
 `;
 
 const Error = styled.span`

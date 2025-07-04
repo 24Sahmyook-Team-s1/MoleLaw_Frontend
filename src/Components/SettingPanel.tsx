@@ -59,6 +59,8 @@ const ChangeButton = styled.button`
   height: 25px;
   width: 60px;
   border-radius: 10px;
+  background-color: #2c2c2c;
+  color: white;
 
   font-size: 12px;
   font-family: pretendard;
@@ -319,7 +321,7 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
           </AnimatedInputArea>
           <OptionStyle>
             회원 탈퇴
-            <ChangeButton style={{ backgroundColor: "Red" }} onClick={quit}>
+            <ChangeButton style={{ backgroundColor: "Red", color:"white" }} onClick={quit}>
               {" "}
               탈퇴{" "}
             </ChangeButton>

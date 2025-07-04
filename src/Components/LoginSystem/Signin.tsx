@@ -80,6 +80,7 @@ const LoginButton = styled.button`
   background-color: ${MainColor};
   border: 1px solid ${Sub};
   margin-top: 5px;
+  color: white;
 
   display: flex;
   justify-content: center;
