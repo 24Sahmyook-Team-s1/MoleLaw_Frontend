@@ -122,7 +122,7 @@ const MainView: React.FC = () => {
   const { getChatRoom, selectedChatRoomID } = useDataStore();
   const { messages, addMessage } = useMessageStore();
   const { askQuestion, loading, continueQuestion } = useQuestionAPI();
-  const { user } = useAuthStore();
+  const { user, refreshToken } = useAuthStore();
   const middleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -137,6 +137,20 @@ const MainView: React.FC = () => {
       });
     }
   },[messages])
+
+  useEffect(() => {
+    if (!user) return;
+
+    refreshToken();
+
+    const intervalID = setInterval(() => {
+      refreshToken();
+    }, 14*60*1000);
+
+    return () => {
+      clearInterval(intervalID);
+    };
+  }, [user, refreshToken]);
 
   const handleAsk = async (msg: string) => {
     addMessage({ sender: "USER", content: msg });

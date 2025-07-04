@@ -176,6 +176,7 @@ interface AuthStore {
     nickname: string
   ) => Promise<void>;
   quit: () => Promise<void>;
+  refreshToken: () => Promise<boolean>;
 }
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
@@ -186,6 +187,25 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setUser: (user: any) => set({ user }),
+
+  refreshToken: async() => {
+    try{
+      const res = await axios.post(
+        `${API_BASE_URL}/auth/reissue`,
+        {},
+        {withCredentials: true}
+      );
+
+      if (res.status === 200) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error(error);
+      set({isAuthenticated: false})
+      return false;
+    }
+  },
 
   //Auth Check
   checkAuthStatus: async () => {
@@ -272,6 +292,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     window.location.href = `${OAUTH2_URL}/kakao`;
   },
 
+  
   //로그아웃 => 세션 삭제 && JWT 토큰 무효화 요청
   logout: async () => {
     try {
