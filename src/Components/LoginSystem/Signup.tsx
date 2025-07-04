@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { MainColor, Sub, Text } from "../../style/Colors";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/states";
@@ -71,11 +71,11 @@ const TermsOfUse = styled.div`
 `;
 
 const TermsText = styled.a`
-  color:${Text};
-  &:hover{
-    color:${Sub}
+  color: ${Text};
+  &:hover {
+    color: ${Sub};
   }
-`
+`;
 
 const TermsCheck = styled.input`
   appearance: none;
@@ -104,6 +104,13 @@ const SignupButton = styled.button`
 const Error = styled.span`
   color: red;
   font-size: 14px;
+`;
+
+const InputAreaDivider = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  width: 100%;
+  gap: 5px;
 `;
 
 const AnimatedArea = styled(Area)<{ show: boolean }>`
@@ -140,6 +147,8 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
   const [render3, setRender3] = useState(false);
   const [render4, setRender4] = useState(false);
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const { LocalSignUp } = useAuthStore();
 
   useEffect(() => {
@@ -166,7 +175,7 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
         await LocalSignUp(email, password, nickname);
         setTimeout(() => {
           window.location.reload();
-        },500);
+        }, 500);
       } catch (error) {
         console.error("회원가입 실패: ", error);
       }
@@ -215,11 +224,27 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
           <Area>
             <InputArea>
               <InputAreaText>비밀번호</InputAreaText>
-              <InputAreaField
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <InputAreaDivider>
+                <InputAreaField
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  style={{
+                    backgroundColor: "transparent",
+                    padding: "0",
+                    margin: "0",
+                  }}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? (
+                    <FaEye color="black" display="block" />
+                  ) : (
+                    <FaEyeSlash color="black" display="block" />
+                  )}
+                </button>
+              </InputAreaDivider>
             </InputArea>
           </Area>
         </AnimatedArea>
@@ -230,7 +255,7 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
             <InputArea>
               <InputAreaText>비밀번호 확인</InputAreaText>
               <InputAreaField
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={passwordCheck}
                 onChange={(e) => setPasswordCheck(e.target.value)}
               />
@@ -242,7 +267,9 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
         <AnimatedArea show={render4}>
           <Area style={{ marginTop: "30px", boxSizing: "border-box" }}>
             <TermsOfUse>
-              <TermsText onClick={terms}>이용 약관(개인정보 수집 및 이용) 동의</TermsText>
+              <TermsText onClick={terms}>
+                이용 약관(개인정보 수집 및 이용) 동의
+              </TermsText>
               <TermsCheck
                 type="checkbox"
                 checked={termsCheck}
