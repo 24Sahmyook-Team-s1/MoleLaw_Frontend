@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import Background from "../Components/Background";
 import SideBar from "../Components/SideBar";
 import ChattingBar from "../Components/ChattingBar";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Text } from "../style/Colors";
 import ChatBubble from "../Components/ChatBubble";
 import {
@@ -123,10 +123,20 @@ const MainView: React.FC = () => {
   const { messages, addMessage } = useMessageStore();
   const { askQuestion, loading, continueQuestion } = useQuestionAPI();
   const { user } = useAuthStore();
+  const middleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getChatRoom();
   }, [getChatRoom]);
+
+  useEffect(() => {
+    if (middleRef.current) {
+      middleRef.current.scrollTo({
+        top: middleRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  },[messages])
 
   const handleAsk = async (msg: string) => {
     addMessage({ sender: "USER", content: msg });
@@ -158,7 +168,7 @@ const MainView: React.FC = () => {
             <img src="/New Chat.svg"></img>
           </button>
         </Top>
-        <Middle>
+        <Middle ref={middleRef}>
           {messages?.length > 0 ? (
             messages.map((msg, idx) => {
               if (msg.sender === "USER" || msg.sender === "BOT") {
