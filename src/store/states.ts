@@ -229,8 +229,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         user: res.data,
         isLoading: false,
       });
-
-      window.location.reload();
     } catch (error) {
       console.log(error);
       set({ isLoading: false });

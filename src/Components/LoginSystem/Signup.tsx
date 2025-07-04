@@ -153,7 +153,7 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
     else setRender4(false);
   }, [email, nickname, password, passwordCheck]);
 
-  const HandleSignup = () => {
+  const HandleSignup = async () => {
     if (email.length > 0 && !isValidEmail(email)) setEmailError(true);
     else setEmailError(false);
     if (password !== passwordCheck) setPasswordError(true);
@@ -162,7 +162,14 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
     else setTermsError(false);
 
     if (!emailError && !passwordError && !termsError)
-      LocalSignUp(email, password, nickname);
+      try {
+        await LocalSignUp(email, password, nickname);
+        setTimeout(() => {
+          window.location.reload();
+        },500);
+      } catch (error) {
+        console.error("회원가입 실패: ", error);
+      }
   };
 
   return (
