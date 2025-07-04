@@ -71,6 +71,7 @@ export const useQuestionAPI = create<QuestionStore>((set) => ({
         console.log(res.data);
         const data = res.data;
         const messages = data.messages;
+        useDataStore.getState().setSelectedRoomID(data.id);
         useMessageStore.getState().setMessages(messages);
         set({loading:false})
       }
