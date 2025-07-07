@@ -3,6 +3,8 @@ import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { MainColor, Sub, Text } from "../../style/Colors";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/states";
+import { AnimatedSignArea } from "../Common/AnimationArea";
+import { InputArea, InputAreaField, InputAreaText } from "../Common/InputArea";
 
 const Panel = styled.div`
   width: 500px;
@@ -23,36 +25,6 @@ const Area = styled.div`
 
   font-family: pretendard;
   margin-bottom: 5px;
-`;
-
-const InputArea = styled.div`
-  width: 300px;
-  height: 45px;
-  background-color: White;
-  border: 1px solid gray;
-  border-radius: 10px;
-
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 2px 12px;
-  box-sizing: border-box;
-  flex-direction: column;
-`;
-
-const InputAreaText = styled.span`
-  font-size: 10px;
-  color: ${Text};
-`;
-
-const InputAreaField = styled.input`
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  background-color: white;
-  border: none;
-  color: black;
-  font-size: 16px;
 `;
 
 const SigninTitle = styled.div`
@@ -111,15 +83,6 @@ const InputAreaDivider = styled.div`
   grid-template-columns: 1fr auto;
   width: 100%;
   gap: 5px;
-`;
-
-const AnimatedArea = styled(Area)<{ show: boolean }>`
-  opacity: ${({ show }) => (show ? 1 : 0)};
-  transform: ${({ show }) => (show ? "translateY(0)" : "translateY(-10px)")};
-  transition: opacity 0.2s ease-in-out,
-    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 0;
-  margin: 0;
 `;
 
 function isValidEmail(email: string) {
@@ -200,13 +163,13 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
           <InputAreaText>이메일</InputAreaText>
           <InputAreaField
             type="email"
-            value={email}
+            value={email} 
             onChange={(e) => setEmail(e.target.value)}
           />
         </InputArea>
       </Area>
       {email && (
-        <AnimatedArea show={render1}>
+        <AnimatedSignArea show={render1}>
           <Area>
             <InputArea>
               <InputAreaText>닉네임</InputAreaText>
@@ -217,10 +180,10 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
               />
             </InputArea>
           </Area>
-        </AnimatedArea>
+        </AnimatedSignArea>
       )}
       {nickname && (
-        <AnimatedArea show={render2}>
+        <AnimatedSignArea show={render2}>
           <Area>
             <InputArea>
               <InputAreaText>비밀번호</InputAreaText>
@@ -247,10 +210,10 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
               </InputAreaDivider>
             </InputArea>
           </Area>
-        </AnimatedArea>
+        </AnimatedSignArea>
       )}
       {password && (
-        <AnimatedArea show={render3}>
+        <AnimatedSignArea show={render3}>
           <Area>
             <InputArea>
               <InputAreaText>비밀번호 확인</InputAreaText>
@@ -261,10 +224,10 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
               />
             </InputArea>
           </Area>
-        </AnimatedArea>
+        </AnimatedSignArea>
       )}
       {passwordCheck && (
-        <AnimatedArea show={render4}>
+        <AnimatedSignArea show={render4}>
           <Area style={{ marginTop: "30px", boxSizing: "border-box" }}>
             <TermsOfUse>
               <TermsText onClick={terms}>
@@ -285,7 +248,7 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
               <Error>이용 약관에 동의해주십쇼</Error>
             )}
           </Area>
-        </AnimatedArea>
+        </AnimatedSignArea>
       )}
     </Panel>
   );

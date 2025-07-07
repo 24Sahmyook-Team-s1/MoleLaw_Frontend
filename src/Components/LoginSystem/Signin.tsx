@@ -1,8 +1,10 @@
 import styled from "@emotion/styled";
-import { MainColor, Sub, Text } from "../../style/Colors";
+import { MainColor, Sub } from "../../style/Colors";
 import { useEffect, useState } from "react";
 import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuthStore } from "../../store/states";
+import { AnimatedSignArea } from "../Common/AnimationArea";
+import { InputArea, InputAreaField, InputAreaText } from "../Common/InputArea";
 
 const Panel = styled.div`
   width: 500px;
@@ -35,43 +37,6 @@ const Area = styled.div`
 
   font-family: pretendard;
   margin-bottom: 5px;
-`;
-
-const InputArea = styled.div`
-  width: 300px;
-  height: 45px;
-  background-color: White;
-  border: 1px solid gray;
-  border-radius: 10px;
-
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 2px 12px;
-  box-sizing: border-box;
-  flex-direction: column;
-`;
-
-const InputAreaText = styled.span`
-  font-size: 10px;
-  color: ${Text};
-`;
-
-const InputAreaField = styled.input`
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  background-color: white;
-  border: none;
-  color: black;
-  font-size: 16px;
-`;
-
-const AnimatedArea = styled(Area)<{ show: boolean }>`
-  opacity: ${({ show }) => (show ? 1 : 0)};
-  transform: ${({ show }) => (show ? "translateY(0)" : "translateY(-10px)")};
-  transition: opacity 0.2s ease-in-out,
-    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 `;
 
 const LoginButton = styled.button`
@@ -164,7 +129,7 @@ const Signin: React.FC<Props> = ({ onArrowClick, handleSignup }) => {
         </InputArea>
       </Area>
       {email && (
-        <AnimatedArea show={passwordRenderer}>
+        <AnimatedSignArea show={passwordRenderer}>
           <Area>
             <InputArea>
               <InputAreaText>비밀번호</InputAreaText>
@@ -204,16 +169,16 @@ const Signin: React.FC<Props> = ({ onArrowClick, handleSignup }) => {
               </div>
             </InputArea>
           </Area>
-        </AnimatedArea>
+        </AnimatedSignArea>
       )}
       {password && (
-        <AnimatedArea show={loginRenderer}>
+        <AnimatedSignArea show={loginRenderer}>
           <Area>
             <LoginButton onClick={() => LocalLogin(email, password)}>
               로그인
             </LoginButton>
           </Area>
-        </AnimatedArea>
+        </AnimatedSignArea>
       )}
       <SigninArea style={{ fontFamily: "pretendard" }}>
         계정이 아직 없다면?
