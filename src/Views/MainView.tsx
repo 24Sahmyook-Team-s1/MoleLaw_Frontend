@@ -1,12 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import Background from "../Components/Background";
 import SideBar from "../Components/SideBar";
 import ChattingBar from "../Components/ChattingBar";
 import ChatBubble from "../Components/ChatBubble";
 import InfoBubble from "../Components/InfoBubble";
-import { useQuestionAPI, useAuthStore } from "../store/states";
-import ReactMarkDown from "react-markdown";
+import {
+  useAuthStore,
+  useDataStore,
+  useMessageStore,
+  useQuestionAPI,
+} from "../store/states";
+import ReactMarkdown, { type Components } from "react-markdown";
 import { Text } from "../style/Colors";
 import { keyframes } from "@emotion/react";
 
@@ -15,6 +20,8 @@ const Wrapper = styled.div`
   grid-template-rows: auto 1fr auto;
   height: 100vh;
   color: ${Text};
+  user-select: none;
+  box-sizing: border-box;
 `;
 
 const Top = styled.div`
@@ -74,12 +81,25 @@ const Bottom = styled.div`
   height: fit-content;
 `;
 
+const UserName = styled.span`
+  background: linear-gradient(
+    90deg,
+    rgba(42, 123, 155, 1) 0%,
+    rgba(87, 199, 133, 1) 50%,
+    rgba(237, 221, 83, 1) 100%
+  );
+  background-clip: text;
+  color: transparent;
+  margin: 0;
+  padding: 0;
+`;
+
 const dotFlashing = keyframes`
-  0%   { content: "검색중"; }
-  25%  { content: "검색중."; }
-  50%  { content: "검색중.."; }
-  75%  { content: "검색중..."; }
-  100% { content: "검색중"; }
+  0%   { content: "🔍 검색중"; }
+  25%  { content: "🔍 검색중."; }
+  50%  { content: "🔍 검색중.."; }
+  75%  { content: "🔍 검색중..."; }
+  100% { content: "🔍 검색중"; }
 `;
 
 const LoadingText = styled.div`
@@ -94,37 +114,57 @@ const LoadingText = styled.div`
   }
 `;
 
-type Message = {
-  role: "user" | "gpt";
-  content: string;
-  type: "dialogue" | "info";
-};
-
 const MainView: React.FC = () => {
-  const [messages, setMessage] = useState<Message[]>([]);
-  const { askQuestion, loading } = useQuestionAPI();
-  const { checkAuthStatus, isAuthenticated, user } = useAuthStore();
+  const middleRef = useRef<HTMLDivElement>(null);
+  const { getChatRoom, selectedChatRoomID } = useDataStore();
+  const { messages, addMessage } = useMessageStore();
+  const { askQuestion, loading, continueQuestion } = useQuestionAPI();
+  const { user, refreshToken, isAuthenticated, checkAuthStatus } = useAuthStore();
+
+  const markdownComponents: Components = {
+    a: ({ href, children, ...props }) => (
+      <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+        {children}
+      </a>
+    ),
+  };
+
+  useEffect(() => {
+    getChatRoom();
+  }, [getChatRoom]);
+
+  useEffect(() => {
+    if (middleRef.current) {
+      middleRef.current.scrollTo({
+        top: middleRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [messages]);
 
   useEffect(() => {
     checkAuthStatus();
-  }, []);
+    if (!user) return;
 
-  const addMessage = (
-    msg: string,
-    role: "user" | "gpt",
-    type: "dialogue" | "info"
-  ) => {
-    const newMessage: Message = { role, content: msg, type };
-    setMessage((prev) => [...prev, newMessage]);
-  };
+    refreshToken();
+
+    const intervalID = setInterval(() => {
+      refreshToken();
+    }, 14 * 60 * 1000);
+
+    return () => clearInterval(intervalID);
+  }, [user, refreshToken]);
 
   const handleAsk = async (msg: string) => {
-    addMessage(msg, "user", "dialogue");
-    const res = await askQuestion(msg);
-    if (res) {
-      addMessage(res.answer, "gpt", "dialogue");
-      addMessage(res.info, "gpt", "info");
+    addMessage({ sender: "USER", content: msg });
+
+    if (selectedChatRoomID) {
+      await continueQuestion(msg);
+    } else {
+      await askQuestion(msg);
     }
+
+    getChatRoom();
   };
 
   return (
@@ -133,7 +173,6 @@ const MainView: React.FC = () => {
       <Wrapper>
         <Top>
           <Logo>MoleLaw</Logo>
-
           {isAuthenticated ? (
             <div style={{ alignSelf: "center", fontSize: "14px" }}>
               👋 {user?.nickname || "로그인 사용자"}님
@@ -143,7 +182,6 @@ const MainView: React.FC = () => {
               로그인 후 이용해주세요
             </div>
           )}
-
           <button
             style={{
               background: "none",
@@ -157,22 +195,21 @@ const MainView: React.FC = () => {
           </button>
         </Top>
 
-        <Middle>
+        <Middle ref={middleRef}>
           {messages.length > 0 ? (
             messages.map((msg, idx) =>
-              msg.type === "dialogue" ? (
+              msg.sender === "USER" || msg.sender === "BOT" ? (
                 <div
                   key={idx}
                   style={{
                     display: "flex",
-                    justifyContent:
-                      msg.role === "user" ? "flex-end" : "flex-start",
+                    justifyContent: msg.sender === "USER" ? "flex-end" : "flex-start",
                     padding: "8px 20px",
                     width: "100%",
                   }}
                 >
-                  <ChatBubble isUser={msg.role === "user"}>
-                    <ReactMarkDown>{msg.content}</ReactMarkDown>
+                  <ChatBubble isUser={msg.sender === "USER"}>
+                    <ReactMarkdown components={markdownComponents}>{msg.content}</ReactMarkdown>
                   </ChatBubble>
                 </div>
               ) : (
@@ -186,7 +223,7 @@ const MainView: React.FC = () => {
                   }}
                 >
                   <InfoBubble>
-                    <ReactMarkDown>{msg.content}</ReactMarkDown>
+                    <ReactMarkdown components={markdownComponents}>{msg.content}</ReactMarkdown>
                   </InfoBubble>
                 </div>
               )
@@ -194,10 +231,10 @@ const MainView: React.FC = () => {
           ) : (
             <ScreenSaver>
               <img src="/PointCircle.svg" />
+              <UserName>{user?.nickname || "사용자"}</UserName>
               오늘의 고민은 무엇인가요?
             </ScreenSaver>
           )}
-
           {loading && (
             <div
               style={{
@@ -213,12 +250,7 @@ const MainView: React.FC = () => {
         </Middle>
 
         <Bottom>
-          <ChattingBar
-            onSubmit={(msg) => {
-              handleAsk(msg);
-            }}
-            chatTrue={messages.length}
-          />
+          <ChattingBar onSubmit={(msg) => handleAsk(msg)} chatTrue={messages?.length || 0} />
         </Bottom>
       </Wrapper>
     </Background>

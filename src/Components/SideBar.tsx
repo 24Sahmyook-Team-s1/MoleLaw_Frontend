@@ -1,7 +1,9 @@
 import styled from "@emotion/styled";
 import { MainColor, Point, PointHighlight, Text } from "../style/Colors";
 import { useEffect, useRef, useState } from "react";
-import { useAuthStore } from "../store/states";
+import ProfilePanel from "./ProfilePanel";
+import SettingPanel from "./SettingPanel";
+import { useDataStore } from "../store/states";
 
 const Wrapper = styled.div<{ hold: boolean }>`
   width: ${({ hold }) => (hold ? "400px" : "110px")};
@@ -11,12 +13,12 @@ const Wrapper = styled.div<{ hold: boolean }>`
   padding-bottom: 20px;
   box-sizing: border-box;
   color: ${Text};
-
+  user-select: none;
   display: grid;
   grid-template-rows: auto 1fr auto;
   justify-items: start;
 
-  transition: 0.8s ease-in-out;
+  transition: 0.5s ease-in-out;
 
   ${({ hold }) =>
     !hold &&
@@ -36,11 +38,16 @@ const MenuLock = styled.div`
 `;
 
 const Chats = styled.div`
-  padding: 50px 0 20px 0;
+  padding: 50px 30px 20px 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
+
+  min-width: 0;
+  overflow: hidden;
+  width: 350px;
+
 `;
 
 const MenueList = styled.div`
@@ -68,10 +75,10 @@ const Menu = styled.div`
   margin-left: -10px;
   border-radius: 30px;
 
-  transition: 0.5s ease-in-out 0.2s;
+  transition: 0.2s ease-in-out 0.1s;
   &:hover {
     background-color: ${PointHighlight};
-    transition: 0.5s ease-in-out;
+    transition: 0.2s ease-in-out;
   }
 `;
 
@@ -84,7 +91,7 @@ const ChatTitle = styled.div<{ isExpanded: boolean }>`
   color: white;
   font-family: "Chiron Sung HK";
   opacity: ${({ isExpanded }) => (isExpanded ? 1 : 0)};
-  transition: opacity 0.5s ease;
+  margin-bottom: 10px;
 `;
 
 const Icon = styled.img`
@@ -94,11 +101,40 @@ const Icon = styled.img`
   margin: 0%;
 `;
 
+const ChatList = styled.div<{show:boolean}>`
+  width: 100%;
+  height: fit-content;
+  min-width: 0;
+  padding: 5px;
+  border-radius: 10px;
+  box-sizing: border-box;
+
+  color: white;
+  font-size: 14px;
+  font-family: Pretendard;
+  opacity: ${({show}) => show ? "1" : "0"};
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+
+  text-align: left;
+  user-select: none;
+  cursor: pointer;
+
+  &:hover{
+    background-color: ${PointHighlight};
+
+  }
+`
+
 const SideBar: React.FC = () => {
   const WidthRef = useRef<HTMLDivElement>(null);
   const [hold, setHold] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const {logout} = useAuthStore();
+  const [settingRenderer, setSettingRenderer] = useState(false);
+
+  const [profileClick, setProfileClick] = useState(false);
+  const {chatRooms, getChatRoomMessage} = useDataStore();
 
   const holdHandler = () => {
     if (!hold) {
@@ -108,6 +144,10 @@ const SideBar: React.FC = () => {
     }
   };
 
+  const ChatRoomHandler = (ID:number) =>{
+    getChatRoomMessage(ID);
+  }
+
   useEffect(() => {
     const el = WidthRef.current;
     if (!el) return;
@@ -115,15 +155,22 @@ const SideBar: React.FC = () => {
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const width = entry.contentRect.width;
-        console.log("ResizeObserver");
         setIsExpanded(width >= 300);
-        console.log(isExpanded);
       }
     });
 
     observer.observe(el);
     return () => observer.disconnect();
   }, [isExpanded]);
+
+  useEffect(() => {
+    if(!isExpanded) setProfileClick(false);
+  },[isExpanded])
+
+  const SettingHandler = () => {
+    setSettingRenderer((prev) => !prev)
+  }
+
 
   return (
     <Wrapper ref={WidthRef} hold={hold}>
@@ -142,6 +189,12 @@ const SideBar: React.FC = () => {
       </MenuLock>
       <Chats>
         <ChatTitle isExpanded={isExpanded}>채팅</ChatTitle>
+          
+          {Array.isArray(chatRooms) && chatRooms.map((room, index) => (
+            <ChatList show={isExpanded} key={room.id || index} onClick={() => ChatRoomHandler(room.id)}>
+              {room.title}
+            </ChatList>
+          ))}
       </Chats>
       <MenueList>
         <Menu onClick={() => window.open("https://www.law.go.kr/")}>
@@ -152,13 +205,12 @@ const SideBar: React.FC = () => {
               maxWidth: isExpanded ? "500px" : "0px",
               overflow: "hidden",
               whiteSpace: "nowrap",
-              transition: "opacity 0.5s ease, max-width 0.5s ease",
             }}
           >
             대한민국 법전
           </span>
         </Menu>
-        <Menu>
+        <Menu onClick={SettingHandler}>
           <Icon src="/Setting.svg" />
           <span
             style={{
@@ -166,13 +218,13 @@ const SideBar: React.FC = () => {
               maxWidth: isExpanded ? "500px" : "0px",
               overflow: "hidden",
               whiteSpace: "nowrap",
-              transition: "opacity 0.5s ease, max-width 0.5s ease",
             }}
           >
             Setting
           </span>
         </Menu>
-        <Menu onClick={logout}>
+        <Menu style={{position: "relative"}}
+        onClick={() => setProfileClick((prev) => !prev)}>
           <Icon src="/Profile.svg" />
           <span
             style={{
@@ -180,13 +232,14 @@ const SideBar: React.FC = () => {
               maxWidth: isExpanded ? "500px" : "0px",
               overflow: "hidden",
               whiteSpace: "nowrap",
-              transition: "opacity 0.5s ease, max-width 0.5s ease",
             }}
           >
             Profile
           </span>
+          {isExpanded && (<ProfilePanel show={profileClick}/>)}
         </Menu>
       </MenueList>
+          <SettingPanel show={settingRenderer} showHandle={SettingHandler}/>
     </Wrapper>
   );
 };
