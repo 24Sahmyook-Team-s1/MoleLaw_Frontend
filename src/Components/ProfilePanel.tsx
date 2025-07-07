@@ -19,7 +19,7 @@ const Wrapper = styled.div<{show:boolean}>`
     z-index: 500;
 
     opacity: ${({show}) => show ? 1 : 0};
-    transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.1s ease-in-out;
     pointer-events: ${({show}) => show ? "auto" : "none"};
 `
 

@@ -40,12 +40,12 @@ const SignUpArea = styled.div<{termhandle: boolean}>`
   grid-template-rows: 1fr 1fr;
 
   transform: ${({ termhandle }) => termhandle ? "translateY(-600px)" : "translateY(0px)"};
-  transition: transform 1s ease-in-out;
+  transition: transform 0.5s ease-in-out;
 `
 
 const AnimatedArea = styled.div<{ loginhandle: boolean, signinhandle: boolean }>`
   transform: ${({ loginhandle, signinhandle }) => loginhandle ? "translateX(0)" : signinhandle ? "translateX(-1000px)" : "translateX(-500px)"};
-  transition: transform 1s ease-in-out;
+  transition: transform 0.5s ease-in-out;
 
   display:flex;
   flex-direction: row;

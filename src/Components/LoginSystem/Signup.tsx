@@ -116,8 +116,8 @@ const InputAreaDivider = styled.div`
 const AnimatedArea = styled(Area)<{ show: boolean }>`
   opacity: ${({ show }) => (show ? 1 : 0)};
   transform: ${({ show }) => (show ? "translateY(0)" : "translateY(-10px)")};
-  transition: opacity 0.4s ease-in-out,
-    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.2s ease-in-out,
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 0;
   margin: 0;
 `;

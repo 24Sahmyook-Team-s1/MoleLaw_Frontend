@@ -197,7 +197,7 @@ const InputAreaField = styled.input`
 const AnimatedInputArea = styled.div<{ show: boolean }>`
   transform: ${({ show }) => (show ? "translateX(0px)" : "translateX(-300px)")};
   opacity: ${({ show }) => (show ? "1" : "0")};
-  transition: transform 0.6s ease-in-out, opacity 0.4s ease-in-out;
+  transition: transform 0.3s ease-in-out, opacity 0.2s ease-in-out;
 `;
 
 interface Props {

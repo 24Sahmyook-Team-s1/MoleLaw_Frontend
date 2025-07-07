@@ -324,7 +324,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
   changeNickname: async (newNickName: string) => {
     try {
-        const res = await axios.patch(
+      const res = await axios.patch(
         `${API_BASE_URL}/auth/nickname`,
         {
           newNickname: newNickName,
@@ -340,10 +340,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       return true;
     } catch (error) {
       const err = error as AxiosError;
-      if(err){
-        alert(
-          "닉네임 변경에 실패하였습니다."
-        )
+      if (err) {
+        alert("닉네임 변경에 실패하였습니다.");
       }
       return false;
     }

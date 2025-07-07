@@ -18,7 +18,7 @@ const Wrapper = styled.div<{ hold: boolean }>`
   grid-template-rows: auto 1fr auto;
   justify-items: start;
 
-  transition: 0.8s ease-in-out;
+  transition: 0.5s ease-in-out;
 
   ${({ hold }) =>
     !hold &&
@@ -75,10 +75,10 @@ const Menu = styled.div`
   margin-left: -10px;
   border-radius: 30px;
 
-  transition: 0.5s ease-in-out 0.2s;
+  transition: 0.2s ease-in-out 0.1s;
   &:hover {
     background-color: ${PointHighlight};
-    transition: 0.5s ease-in-out;
+    transition: 0.2s ease-in-out;
   }
 `;
 
@@ -91,7 +91,6 @@ const ChatTitle = styled.div<{ isExpanded: boolean }>`
   color: white;
   font-family: "Chiron Sung HK";
   opacity: ${({ isExpanded }) => (isExpanded ? 1 : 0)};
-  transition: opacity 0.5s ease;
   margin-bottom: 10px;
 `;
 
@@ -206,7 +205,6 @@ const SideBar: React.FC = () => {
               maxWidth: isExpanded ? "500px" : "0px",
               overflow: "hidden",
               whiteSpace: "nowrap",
-              transition: "opacity 0.5s ease, max-width 0.5s ease",
             }}
           >
             대한민국 법전
@@ -220,7 +218,6 @@ const SideBar: React.FC = () => {
               maxWidth: isExpanded ? "500px" : "0px",
               overflow: "hidden",
               whiteSpace: "nowrap",
-              transition: "opacity 0.5s ease, max-width 0.5s ease",
             }}
           >
             Setting
@@ -235,7 +232,6 @@ const SideBar: React.FC = () => {
               maxWidth: isExpanded ? "500px" : "0px",
               overflow: "hidden",
               whiteSpace: "nowrap",
-              transition: "opacity 0.5s ease, max-width 0.5s ease",
             }}
           >
             Profile

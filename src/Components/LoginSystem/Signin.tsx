@@ -70,8 +70,8 @@ const InputAreaField = styled.input`
 const AnimatedArea = styled(Area)<{ show: boolean }>`
   opacity: ${({ show }) => (show ? 1 : 0)};
   transform: ${({ show }) => (show ? "translateY(0)" : "translateY(-10px)")};
-  transition: opacity 0.4s ease-in-out,
-    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.2s ease-in-out,
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 `;
 
 const LoginButton = styled.button`
@@ -93,7 +93,7 @@ const SigninArea = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 40px;
-  transition: 0.4s ease-in-out;
+  transition: 0.2s ease-in-out;
 `;
 
 const SignUpText = styled.span`
