@@ -14,7 +14,7 @@ const Panel = styled.div<{ show: boolean }>`
   overflow: hidden;
   pointer-events: ${({ show }) => (show ? "auto" : "none")};
   z-index: 2;
-  padding:0;
+  padding: 0;
   margin: 0;
 `;
 
@@ -206,10 +206,11 @@ interface Props {
 }
 
 const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
-  const { user, quit } = useAuthStore();
+  const { user, quit, changeNickname, changePassword } = useAuthStore();
 
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
+  const [newNickname, setNewNickname] = useState("");
 
   const [nameClick, setNameClick] = useState(false);
   const [passwordClick, setPasswordClick] = useState(false);
@@ -240,12 +241,20 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
               <InputArea>
                 <InputAreaText>변경할 이름</InputAreaText>
                 <InputAreaDivider>
-                  <InputAreaField />
+                  <InputAreaField
+                    value={newNickname}
+                    onChange={(e) => setNewNickname(e.target.value)}
+                  />
                   <button
                     style={{
                       backgroundColor: "transparent",
                       padding: "0",
                       margin: "0",
+                    }}
+                    onClick={async () => {
+                      await changeNickname(newNickname);
+                      setNewNickname("");
+                      setNameClick(false);
                     }}
                   >
                     <FaRegSave color="black" />
@@ -312,6 +321,16 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
                       padding: "0",
                       margin: "0",
                     }}
+                    onClick={async () => {
+                      if (password === passwordCheck) {
+                        await changePassword(password);
+                        setPassword("");
+                        setPasswordCheck("");
+                        setPasswordClick(false);
+                      } else {
+                        alert("패스워드가 일치하지 않습니다");
+                      }
+                    }}
                   >
                     <FaRegSave color="black" />
                   </button>
@@ -321,7 +340,10 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
           </AnimatedInputArea>
           <OptionStyle>
             회원 탈퇴
-            <ChangeButton style={{ backgroundColor: "Red", color:"white" }} onClick={quit}>
+            <ChangeButton
+              style={{ backgroundColor: "Red", color: "white" }}
+              onClick={quit}
+            >
               {" "}
               탈퇴{" "}
             </ChangeButton>
