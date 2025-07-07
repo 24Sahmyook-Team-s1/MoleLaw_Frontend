@@ -11,7 +11,7 @@ import {
   useMessageStore,
   useQuestionAPI,
 } from "../store/states";
-import ReactMarkDown from "react-markdown";
+import ReactMarkDown, { type Components } from "react-markdown";
 import InfoBubble from "../Components/InfoBubble";
 import { keyframes } from "@emotion/react";
 
@@ -125,6 +125,17 @@ const MainView: React.FC = () => {
   const { user, refreshToken } = useAuthStore();
   const middleRef = useRef<HTMLDivElement>(null);
 
+  const markdownComponents: Components = {
+    a: ({ href, children, ...props }) => (
+      <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      {...props}
+      >{children}</a>
+    )
+  }
+
   useEffect(() => {
     getChatRoom();
   }, [getChatRoom]);
@@ -198,7 +209,7 @@ const MainView: React.FC = () => {
                     }}
                   >
                     <ChatBubble isUser={msg.sender === "USER"}>
-                      <ReactMarkDown>{msg.content}</ReactMarkDown>
+                      <ReactMarkDown components={markdownComponents}>{msg.content}</ReactMarkDown>
                     </ChatBubble>
                   </div>
                 );
@@ -214,7 +225,7 @@ const MainView: React.FC = () => {
                     }}
                   >
                     <InfoBubble>
-                      <ReactMarkDown>{msg.content}</ReactMarkDown>
+                      <ReactMarkDown components={markdownComponents}>{msg.content}</ReactMarkDown>
                     </InfoBubble>
                   </div>
                 );
