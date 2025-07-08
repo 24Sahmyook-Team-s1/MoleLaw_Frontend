@@ -3,11 +3,12 @@ import { useAuthStore } from "../store/states";
 import { Stroke, Sub, Text } from "../style/Colors";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash, FaRegSave } from "react-icons/fa";
 import { AnimatedInputArea } from "./Common/AnimationArea";
 import { TermsOfUseText } from "../Data/TermsofUse";
 import { InputArea, InputAreaField, InputAreaText } from "./Common/InputArea";
+import QuitPopup from "./QuitPopup";
 
 const Panel = styled.div<{ show: boolean }>`
   position: fixed;
@@ -168,7 +169,7 @@ interface Props {
 }
 
 const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
-  const { user, quit, changeNickname, changePassword } = useAuthStore();
+  const { user, changeNickname, changePassword } = useAuthStore();
 
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
@@ -177,6 +178,13 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
   const [nameClick, setNameClick] = useState(false);
   const [passwordClick, setPasswordClick] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [quitClick, setQuitClick] = useState(false);
+
+  useEffect(() => {
+    if(!show){
+      setQuitClick(false);
+    }
+  },[show])
 
   return (
     <Panel onClick={showHandle} show={show}>
@@ -304,7 +312,7 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
             회원 탈퇴
             <ChangeButton
               style={{ backgroundColor: "Red", color: "white" }}
-              onClick={quit}
+              onClick={() => setQuitClick((prev) => !prev)}
             >
               {" "}
               탈퇴{" "}
@@ -320,6 +328,7 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
           </TermsOfUse>
         </TermsOfUseArea>
       </Wrapper>
+      <QuitPopup show={quitClick && show}/>
     </Panel>
   );
 };

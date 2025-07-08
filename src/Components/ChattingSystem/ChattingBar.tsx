@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { useRef, useEffect, useState } from "react";
-import { Stroke, Text } from "../style/Colors";
+import { Stroke, Text } from "../../style/Colors";
 
 const Wrapper = styled.div<{ chatTrue: number }>`
   width: 1000px;

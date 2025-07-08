@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
 import Background from "../Components/Background";
 import SideBar from "../Components/SideBar";
-import ChattingBar from "../Components/ChattingBar";
+import ChattingBar from "../Components/ChattingSystem/ChattingBar";
 import { useEffect, useRef } from "react";
 import { Text } from "../style/Colors";
-import ChatBubble from "../Components/ChatBubble";
+import ChatBubble from "../Components/ChattingSystem/ChatBubble";
 import {
   useAuthStore,
   useDataStore,
@@ -12,7 +12,7 @@ import {
   useQuestionAPI,
 } from "../store/states";
 import ReactMarkDown, { type Components } from "react-markdown";
-import InfoBubble from "../Components/InfoBubble";
+import InfoBubble from "../Components/ChattingSystem/InfoBubble";
 import { keyframes } from "@emotion/react";
 
 const Wrapper = styled.div`
