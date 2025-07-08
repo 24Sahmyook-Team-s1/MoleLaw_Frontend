@@ -47,7 +47,6 @@ const Chats = styled.div`
   min-width: 0;
   overflow: hidden;
   width: 350px;
-
 `;
 
 const MenueList = styled.div`
@@ -101,31 +100,56 @@ const Icon = styled.img`
   margin: 0%;
 `;
 
-const ChatList = styled.div<{show:boolean}>`
+const ChatList = styled.div<{ show: boolean }>`
   width: 100%;
   height: fit-content;
   min-width: 0;
   padding: 5px;
   border-radius: 10px;
   box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr auto;
 
   color: white;
   font-size: 14px;
   font-family: Pretendard;
-  opacity: ${({show}) => show ? "1" : "0"};
-  white-space: nowrap;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
+  opacity: ${({ show }) => (show ? "1" : "0")};
+  gap: 10px;
 
   text-align: left;
   user-select: none;
   cursor: pointer;
 
-  &:hover{
+  &:hover {
     background-color: ${PointHighlight};
-
   }
-`
+`;
+const Chat = styled.div`
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+const Del = styled.div`
+  width: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const DelButton = styled.button`
+  width: 15px;
+  height: 10px;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: white;
+
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const SideBar: React.FC = () => {
   const WidthRef = useRef<HTMLDivElement>(null);
@@ -133,8 +157,10 @@ const SideBar: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [settingRenderer, setSettingRenderer] = useState(false);
 
+  const [hoverRoomID, setHoveredRoomID] = useState<number | null>(null);
+
   const [profileClick, setProfileClick] = useState(false);
-  const {chatRooms, getChatRoomMessage} = useDataStore();
+  const { chatRooms, getChatRoomMessage, deleteChatroom } = useDataStore();
 
   const holdHandler = () => {
     if (!hold) {
@@ -144,9 +170,20 @@ const SideBar: React.FC = () => {
     }
   };
 
-  const ChatRoomHandler = (ID:number) =>{
+  const ChatRoomHandler = (ID: number) => {
     getChatRoomMessage(ID);
-  }
+  };
+
+  const ChatRoomDeleteHandler = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    if(hoverRoomID!=null){
+      deleteChatroom(hoverRoomID);
+      window.location.reload();
+    } else {
+      return false;
+    }
+    
+  };
 
   useEffect(() => {
     const el = WidthRef.current;
@@ -164,13 +201,12 @@ const SideBar: React.FC = () => {
   }, [isExpanded]);
 
   useEffect(() => {
-    if(!isExpanded) setProfileClick(false);
-  },[isExpanded])
+    if (!isExpanded) setProfileClick(false);
+  }, [isExpanded]);
 
   const SettingHandler = () => {
-    setSettingRenderer((prev) => !prev)
-  }
-
+    setSettingRenderer((prev) => !prev);
+  };
 
   return (
     <Wrapper ref={WidthRef} hold={hold}>
@@ -189,10 +225,20 @@ const SideBar: React.FC = () => {
       </MenuLock>
       <Chats>
         <ChatTitle isExpanded={isExpanded}>채팅</ChatTitle>
-          
-          {Array.isArray(chatRooms) && chatRooms.map((room, index) => (
-            <ChatList show={isExpanded} key={room.id || index} onClick={() => ChatRoomHandler(room.id)}>
-              {room.title}
+
+        {Array.isArray(chatRooms) &&
+          chatRooms.map((room, index) => (
+            <ChatList
+              show={isExpanded}
+              key={room.id || index}
+              onClick={() => ChatRoomHandler(room.id)}
+              onMouseEnter={() => setHoveredRoomID(room.id)}
+              onMouseLeave={() => setHoveredRoomID(null)}
+            >
+              <Chat>{room.title}</Chat>
+              <Del>
+                {hoverRoomID === room.id ? <DelButton onClick={(e) => (ChatRoomDeleteHandler(e))}>X</DelButton> : ""}
+              </Del>
             </ChatList>
           ))}
       </Chats>
@@ -223,8 +269,10 @@ const SideBar: React.FC = () => {
             Setting
           </span>
         </Menu>
-        <Menu style={{position: "relative"}}
-        onClick={() => setProfileClick((prev) => !prev)}>
+        <Menu
+          style={{ position: "relative" }}
+          onClick={() => setProfileClick((prev) => !prev)}
+        >
           <Icon src="/Profile.svg" />
           <span
             style={{
@@ -236,10 +284,10 @@ const SideBar: React.FC = () => {
           >
             Profile
           </span>
-          {isExpanded && (<ProfilePanel show={profileClick}/>)}
+          {isExpanded && <ProfilePanel show={profileClick} />}
         </Menu>
       </MenueList>
-          <SettingPanel show={settingRenderer} showHandle={SettingHandler}/>
+      <SettingPanel show={settingRenderer} showHandle={SettingHandler} />
     </Wrapper>
   );
 };

@@ -27,6 +27,7 @@ interface DataStore {
   chatRooms: Chatroom[];
   getChatRoom: () => void;
   getChatRoomMessage: (ChatRoomID: number) => Promise<boolean | undefined>;
+  deleteChatroom: (ChatRoomID: number) => Promise<boolean> ;
 
   selectedChatRoomID: number | null;
   setSelectedRoomID: (id: number) => void;
@@ -109,7 +110,7 @@ export const useQuestionAPI = create<QuestionStore>((set) => ({
   },
 }));
 
-export const useDataStore = create<DataStore>((set) => ({
+export const useDataStore = create<DataStore>((set, get) => ({
   chatRooms: [],
   selectedChatRoomID: null,
 
@@ -154,6 +155,20 @@ export const useDataStore = create<DataStore>((set) => ({
       return false;
     }
   },
+
+  deleteChatroom: async(ChatRoomID: number) => {
+    try{
+      await axios.delete(`${API_BASE_URL}/chat-rooms/${ChatRoomID}`,
+        {
+          withCredentials: true,
+        }
+      );
+      get().getChatRoom();
+      return true;
+    } catch {
+      return false;
+    }
+  }
 }));
 
 interface AuthStore {
