@@ -106,7 +106,6 @@ const PersonalProfileText = styled.div`
 const ProfileArea = styled.div`
   display: grid;
   grid-template-rows: auto auto auto auto;
-
   border-bottom: 1px solid ${Stroke};
 `;
 
@@ -208,7 +207,7 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
           </OptionStyle>
           <AnimatedInputArea show={nameClick}>
             {nameClick && (
-              <InputArea>
+              <InputArea style={{justifySelf:"flex-end", marginBottom:"10px"}}>
                 <InputAreaText>변경할 이름</InputAreaText>
                 <InputAreaDivider>
                   <InputAreaField
@@ -249,7 +248,7 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
           </OptionStyle>
           <AnimatedInputArea show={passwordClick}>
             {passwordClick && (
-              <InputArea>
+              <InputArea style={{justifySelf:"flex-end", marginBottom:"10px"}}>
                 <InputAreaText>새로운 비밀번호</InputAreaText>
                 <InputAreaDivider>
                   <InputAreaField
@@ -277,7 +276,7 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
           </AnimatedInputArea>
           <AnimatedInputArea show={Boolean(password)}>
             {password && passwordClick && (
-              <InputArea>
+              <InputArea style={{justifySelf:"flex-end", marginBottom:"10px"}}>
                 <InputAreaText>비밀번호 확인</InputAreaText>
                 <InputAreaDivider>
                   <InputAreaField

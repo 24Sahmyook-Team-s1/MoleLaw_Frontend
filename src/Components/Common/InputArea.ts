@@ -14,6 +14,8 @@ export const InputArea = styled.div`
   padding: 2px 12px;
   box-sizing: border-box;
   flex-direction: column;
+  font-family: Pretendard;
+  font-weight: bold;
 `;
 
 export const InputAreaText = styled.span`

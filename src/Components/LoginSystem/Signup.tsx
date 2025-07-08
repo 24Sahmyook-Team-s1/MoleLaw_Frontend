@@ -126,14 +126,17 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
   }, [email, nickname, password, passwordCheck]);
 
   const HandleSignup = async () => {
-    if (email.length > 0 && !isValidEmail(email)) setEmailError(true);
-    else setEmailError(false);
-    if (password !== passwordCheck) setPasswordError(true);
-    else setPasswordError(false);
-    if (!termsCheck) setTermsError(true);
-    else setTermsError(false);
 
-    if (!emailError && !passwordError && !termsError)
+    const isEmailValid = email.length > 0 && isValidEmail(email);
+    const isPasswordValid = password.length > 0;
+    const isPasswordMatch = password === passwordCheck;
+    const isTermsAccepted = termsCheck;
+
+    setEmailError(!isEmailValid);
+    setPasswordError(!isPasswordMatch || !isPasswordValid);
+    setTermsError(!isTermsAccepted);
+
+    if (isEmailValid && isPasswordMatch && isTermsAccepted && isPasswordValid)
       try {
         await LocalSignUp(email, password, nickname);
         setTimeout(() => {
