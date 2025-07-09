@@ -1,3 +1,4 @@
+//import { useToastStore } from "./toast";
 import { create } from "zustand";
 import axios, { AxiosError } from "axios";
 
@@ -62,7 +63,17 @@ export const useQuestionAPI = create<QuestionStore>((set) => ({
 
   askQuestion: async (content: string) => {
     set({ loading: true, error: null });
-
+    // 프롬프트 Jailbreak 방지용 검증 코드
+    // if (isMaliciousPrompt(content)) {
+    //   useToastStore
+    //     .getState()
+    //     .showToast("부적절한 프롬프트가 감지되어 로그아웃 합니다.");
+    //   setTimeout(async () => {
+    //     await useAuthStore.getState().logout();
+    //   }, 1500);
+    //   set({ loading: false });
+    //   return;
+    // }
     try {
       const res = await axios.post<{ id: number; messages: Message[] }>(
         `${API_BASE_URL}/chat-rooms/first-message`,
@@ -88,7 +99,16 @@ export const useQuestionAPI = create<QuestionStore>((set) => ({
 
   continueQuestion: async (content: string) => {
     set({ loading: true, error: null });
-
+    // if (isMaliciousPrompt(content)) {
+    //   useToastStore
+    //     .getState()
+    //     .showToast("부적절한 프롬프트가 감지되어 로그아웃 합니다.");
+    //   setTimeout(async () => {
+    //     await useAuthStore.getState().logout();
+    //   }, 1500);
+    //   set({ loading: false });
+    //   return;
+    // }
     try {
       const selectedRoom = useDataStore.getState().selectedChatRoomID;
       const res = await axios.post<Message>(
@@ -330,8 +350,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   },
 
   changeNickname: async (newNickName: string) => {
-      const success = "닉네임 변경에 성공하였습니다.";
-      const fail = "닉네임 변경에 실패하였습니다.";
+    const success = "닉네임 변경에 성공하였습니다.";
+    const fail = "닉네임 변경에 실패하였습니다.";
     try {
       const res = await axios.patch(
         `${API_BASE_URL}/auth/nickname`,
@@ -366,16 +386,30 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       );
       if (res.status === 200) {
         get().checkAuthStatus();
-        return("비밀번호 변경에 성공하였습니다.");
+        return "비밀번호 변경에 성공하였습니다.";
       }
       return fail;
     } catch (error) {
       const err = error as AxiosError;
       if (err.response?.status === 400) {
-        return("소셜 계정은 비밀번호 변경이 불가합니다.");
+        return "소셜 계정은 비밀번호 변경이 불가합니다.";
       } else {
         return fail;
       }
     }
   },
 }));
+
+// GPT Jailbreak 검증용 패턴. 필요시 사용 (현재 Backend 에서 사용중)
+// const bannedPatterns = [
+//   /ignore\s+(all\s+)?previous\s+instructions/i,
+//   /jailbreak/i,
+//   /DAN/i,
+//   /developer\s+mode/i,
+//   /simulate\s+a\s+chatgpt\s+instance/i,
+//   /UserQuery\s/i,
+// ];
+
+// function isMaliciousPrompt(prompt: string): boolean {
+//   return bannedPatterns.some((pattern) => pattern.test(prompt));
+// }

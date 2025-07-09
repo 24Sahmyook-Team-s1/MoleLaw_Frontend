@@ -89,9 +89,13 @@ const ChattingBar: React.FC<Props> = ({ onSubmit, chatTrue }) => {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
-          if (e.shiftKey && e.key === "Enter") {
-            e.preventDefault(); // 줄바꿈 방지
-            handleSubmit();
+          if (e.key === "Enter") {
+            if(e.shiftKey) {
+              return;
+            } else {
+              e.preventDefault(); // 줄바꿈 방지
+              handleSubmit();
+          }
           }
         }}
       />
