@@ -60,6 +60,10 @@ const QuitButton = styled.button<{Active:boolean}>`
     font-size: 18px;
     font-family: Chiron Sung HK;
     pointer-events: ${({Active}) => (Active ? "auto" : "none")};
+
+    &:active{
+        transform: scale(0.95);
+    }
 `
 const ErrorMessage = styled.div`
     height: 30px;

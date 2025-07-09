@@ -69,6 +69,10 @@ const LogoutButton= styled.button`
     border: 1px solid #fc8484;
     font-size: 18px;
     color: white;
+
+    &:active {
+        transform: scale(0.95);
+    }
 `
 
 interface Props {

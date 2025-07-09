@@ -50,6 +50,10 @@ const CheckButton = styled.button`
   justify-content: center;
   align-items: center;
   color: white;
+
+  &:active{
+    transform: scale(0.95);
+  }
 `;
 
 interface Props {

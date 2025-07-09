@@ -55,6 +55,9 @@ const LoginButton = styled.button`
     padding: 0;
     margin: 0;
   }
+  &:active{
+    transform: scale(0.95);
+  }
 `;
 
 const GoogleButton = styled.div`

@@ -52,6 +52,10 @@ const LoginButton = styled.button`
   align-items: center;
   font-family: pretendard;
   font-size: 16px;
+
+  &:active{
+    transform: scale(0.95);
+  }
 `;
 
 const SigninArea = styled.div`
