@@ -162,6 +162,29 @@ const InputAreaDivider = styled.div`
   gap: 5px;
 `;
 
+const ToastPopup = styled.div<{ toast: boolean }>`
+  position: fixed;
+  left: 50%;
+  transform: ${({ toast }) =>
+    toast ? "translate(-50%, -30%)" : "translate(-50%, -250%)"};
+  transition: transform 0.2s ease-in-out;
+
+  width: fit-content;
+  height: 22px;
+  box-sizing: border-box;
+  padding: 20px 20px;
+  background-color: #000000dd;
+  backdrop-filter: blur(20px);
+  border: 1px solid ${Stroke};
+  color: white;
+  border-radius: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  font-family: Pretendard;
+`;
+
 interface Props {
   show: boolean;
   showHandle: () => void;
@@ -173,17 +196,44 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [newNickname, setNewNickname] = useState("");
+  const [toastText, setToastText] = useState("");
 
   const [nameClick, setNameClick] = useState(false);
   const [passwordClick, setPasswordClick] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [quitClick, setQuitClick] = useState(false);
+  const [toastOn, settoastOn] = useState(false);
 
   useEffect(() => {
-    if(!show){
+    if (!show) {  
       setQuitClick(false);
     }
-  },[show])
+  }, [show]);
+
+  const handleToast = () => {
+    const TimerHandler = () => {
+      settoastOn(false);
+    };
+    settoastOn(true);
+    setTimeout(TimerHandler, 1.5 * 1000);
+  };
+
+  const handleNewNickname = async () => {
+    const msg = await changeNickname(newNickname);
+    setToastText(msg);
+    setNewNickname("");
+    setNameClick(false);
+    handleToast();
+  };
+
+  const handleNewPassword = async () => {
+    const msg = await changePassword(password);
+    setToastText(msg);
+    setPassword("");
+    setPasswordCheck("");
+    setPasswordClick(false);
+    handleToast();
+  }
 
   return (
     <Panel onClick={showHandle} show={show}>
@@ -207,7 +257,9 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
           </OptionStyle>
           <AnimatedInputArea show={nameClick}>
             {nameClick && (
-              <InputArea style={{justifySelf:"flex-end", marginBottom:"10px"}}>
+              <InputArea
+                style={{ justifySelf: "flex-end", marginBottom: "10px" }}
+              >
                 <InputAreaText>변경할 이름</InputAreaText>
                 <InputAreaDivider>
                   <InputAreaField
@@ -220,11 +272,7 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
                       padding: "0",
                       margin: "0",
                     }}
-                    onClick={async () => {
-                      await changeNickname(newNickname);
-                      setNewNickname("");
-                      setNameClick(false);
-                    }}
+                    onClick={handleNewNickname}
                   >
                     <FaRegSave color="black" />
                   </button>
@@ -248,7 +296,9 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
           </OptionStyle>
           <AnimatedInputArea show={passwordClick}>
             {passwordClick && (
-              <InputArea style={{justifySelf:"flex-end", marginBottom:"10px"}}>
+              <InputArea
+                style={{ justifySelf: "flex-end", marginBottom: "10px" }}
+              >
                 <InputAreaText>새로운 비밀번호</InputAreaText>
                 <InputAreaDivider>
                   <InputAreaField
@@ -276,7 +326,9 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
           </AnimatedInputArea>
           <AnimatedInputArea show={Boolean(password)}>
             {password && passwordClick && (
-              <InputArea style={{justifySelf:"flex-end", marginBottom:"10px"}}>
+              <InputArea
+                style={{ justifySelf: "flex-end", marginBottom: "10px" }}
+              >
                 <InputAreaText>비밀번호 확인</InputAreaText>
                 <InputAreaDivider>
                   <InputAreaField
@@ -290,14 +342,12 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
                       padding: "0",
                       margin: "0",
                     }}
-                    onClick={async () => {
+                    onClick={() => {
                       if (password === passwordCheck) {
-                        await changePassword(password);
-                        setPassword("");
-                        setPasswordCheck("");
-                        setPasswordClick(false);
+                        handleNewPassword();
                       } else {
-                        alert("패스워드가 일치하지 않습니다");
+                        setToastText("패스워드가 일치하지 않습니다");
+                        handleToast();
                       }
                     }}
                   >
@@ -327,11 +377,10 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
           </TermsOfUse>
         </TermsOfUseArea>
       </Wrapper>
-      <QuitPopup show={quitClick && show}/>
+      <QuitPopup show={quitClick && show} />
+      <ToastPopup toast={toastOn}>{toastText}</ToastPopup>
     </Panel>
   );
 };
 
 export default SettingPanel;
-
-
