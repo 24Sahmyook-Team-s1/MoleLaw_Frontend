@@ -27,7 +27,7 @@ interface DataStore {
   chatRooms: Chatroom[];
   getChatRoom: () => void;
   getChatRoomMessage: (ChatRoomID: number) => Promise<boolean | undefined>;
-  deleteChatroom: (ChatRoomID: number) => Promise<boolean> ;
+  deleteChatroom: (ChatRoomID: number) => Promise<boolean>;
 
   selectedChatRoomID: number | null;
   setSelectedRoomID: (id: number) => void;
@@ -128,8 +128,7 @@ export const useDataStore = create<DataStore>((set, get) => ({
         console.log(res.data);
         return true;
       }
-    } catch (error) {
-      console.log(error);
+    } catch {
       set({
         chatRooms: undefined,
       });
@@ -150,25 +149,22 @@ export const useDataStore = create<DataStore>((set, get) => ({
         console.log(res.data);
         return true;
       }
-    } catch (error) {
-      console.log(error);
+    } catch {
       return false;
     }
   },
 
-  deleteChatroom: async(ChatRoomID: number) => {
-    try{
-      await axios.delete(`${API_BASE_URL}/chat-rooms/${ChatRoomID}`,
-        {
-          withCredentials: true,
-        }
-      );
+  deleteChatroom: async (ChatRoomID: number) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/chat-rooms/${ChatRoomID}`, {
+        withCredentials: true,
+      });
       get().getChatRoom();
       return true;
     } catch {
       return false;
     }
-  }
+  },
 }));
 
 interface AuthStore {
@@ -189,10 +185,10 @@ interface AuthStore {
     password: string,
     nickname: string
   ) => Promise<void>;
-  quit: () => Promise<void>;
+  quit: () => Promise<boolean>;
   refreshToken: () => Promise<boolean>;
-  changeNickname: (newNickName: string) => Promise<boolean>;
-  changePassword: (newPassword: string) => Promise<boolean>;
+  changeNickname: (newNickName: string) => Promise<string>;
+  changePassword: (newPassword: string) => Promise<string>;
 }
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
@@ -216,8 +212,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         return true;
       }
       return false;
-    } catch (error) {
-      console.error(error);
+    } catch {
       set({ isAuthenticated: false });
       return false;
     }
@@ -237,8 +232,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         });
         return true;
       }
-    } catch (error) {
-      console.error("인증 상태 확인 오류:", error);
+    } catch {
       set({
         user: null,
         isAuthenticated: false,
@@ -266,8 +260,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         user: res.data,
         isLoading: false,
       });
-    } catch (error) {
-      console.log(error);
+    } catch {
       set({ isLoading: false });
     }
   },
@@ -288,8 +281,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
       // 로그인 성공 시 처리
       await get().checkAuthStatus();
-    } catch (error) {
-      console.error("로그인 실패", error);
+    } catch {
       set({ isLoading: false });
     }
   },
@@ -320,8 +312,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       );
       set({ user: null, isAuthenticated: false });
       return true;
-    } catch (error) {
-      console.error("로그아웃 오류:", error);
+    } catch {
       return false;
     }
   },
@@ -332,12 +323,15 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         withCredentials: true,
       });
       set({ user: null, isAuthenticated: false });
-    } catch (error) {
-      console.error("로그아웃 오류:", error);
+      return true;
+    } catch {
+      return false;
     }
   },
 
   changeNickname: async (newNickName: string) => {
+      const success = "닉네임 변경에 성공하였습니다.";
+      const fail = "닉네임 변경에 실패하였습니다.";
     try {
       const res = await axios.patch(
         `${API_BASE_URL}/auth/nickname`,
@@ -349,20 +343,17 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         }
       );
       if (res.status === 200) {
-        alert("닉네임 변경에 성공하였습니다.");
+        get().checkAuthStatus();
+        return success;
       }
-      get().checkAuthStatus();
-      return true;
-    } catch (error) {
-      const err = error as AxiosError;
-      if (err) {
-        alert("닉네임 변경에 실패하였습니다.");
-      }
-      return false;
+      return fail;
+    } catch {
+      return fail;
     }
   },
 
   changePassword: async (newPassword: string) => {
+    const fail = "비밀번호 변경에 실패하였습니다.";
     try {
       const res = await axios.patch(
         `${API_BASE_URL}/auth/password`,
@@ -374,19 +365,17 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         }
       );
       if (res.status === 200) {
-        alert("비밀번호 변경에 성공하였습니다.");
+        get().checkAuthStatus();
+        return("비밀번호 변경에 성공하였습니다.");
       }
-      get().checkAuthStatus();
-      return true;
+      return fail;
     } catch (error) {
       const err = error as AxiosError;
       if (err.response?.status === 400) {
-        alert("소셜 계정은 비밀번호 변경이 불가합니다.");
+        return("소셜 계정은 비밀번호 변경이 불가합니다.");
       } else {
-        alert("비밀번호 변경에 실패하였습니다.");
+        return fail;
       }
-      return false;
     }
-    return false;
   },
 }));

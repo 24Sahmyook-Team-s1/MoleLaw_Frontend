@@ -132,7 +132,7 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
     const isPasswordMatch = password === passwordCheck;
     const isTermsAccepted = termsCheck;
 
-    setEmailError(!isEmailValid);
+    setEmailError(!isEmailValid); 
     setPasswordError(!isPasswordMatch || !isPasswordValid);
     setTermsError(!isTermsAccepted);
 
