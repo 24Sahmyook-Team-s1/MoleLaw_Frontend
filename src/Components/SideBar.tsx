@@ -15,7 +15,7 @@ const Wrapper = styled.div<{ hold: boolean }>`
   color: ${Text};
   user-select: none;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto auto 1fr auto;
   justify-items: start;
 
   transition: 0.5s ease-in-out;
@@ -38,15 +38,33 @@ const MenuLock = styled.div`
 `;
 
 const Chats = styled.div`
-  padding: 50px 30px 20px 0;
+  padding: 20px 30px 20px 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 5px;
 
   min-width: 0;
-  overflow: hidden;
+  overflow: auto;
   width: 350px;
+
+  /* 스크롤바 wrapper 역할 */
+  position: relative;
+  transition: background-color 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  
+  /* Chrome, Safari, Edge 기반 브라우저 전용 */
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${PointHighlight};
+    border-radius: 20px;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: ${Point};
+  }
 `;
 
 const MenueList = styled.div`
@@ -90,7 +108,8 @@ const ChatTitle = styled.div<{ isExpanded: boolean }>`
   color: white;
   font-family: "Chiron Sung HK";
   opacity: ${({ isExpanded }) => (isExpanded ? 1 : 0)};
-  margin-bottom: 10px;
+
+  margin-top: 50px;
 `;
 
 const Icon = styled.img`
@@ -176,13 +195,12 @@ const SideBar: React.FC = () => {
 
   const ChatRoomDeleteHandler = (event: React.MouseEvent) => {
     event.stopPropagation();
-    if(hoverRoomID!=null){
+    if (hoverRoomID != null) {
       deleteChatroom(hoverRoomID);
       window.location.reload();
     } else {
       return false;
     }
-    
   };
 
   useEffect(() => {
@@ -223,9 +241,8 @@ const SideBar: React.FC = () => {
           <Icon src="/MenuHold.svg" alt="Toggle Sidebar" />
         </button>
       </MenuLock>
+      <ChatTitle isExpanded={isExpanded}>채팅</ChatTitle>
       <Chats>
-        <ChatTitle isExpanded={isExpanded}>채팅</ChatTitle>
-
         {Array.isArray(chatRooms) &&
           chatRooms.map((room, index) => (
             <ChatList
@@ -237,7 +254,13 @@ const SideBar: React.FC = () => {
             >
               <Chat>{room.title}</Chat>
               <Del>
-                {hoverRoomID === room.id ? <DelButton onClick={(e) => (ChatRoomDeleteHandler(e))}>X</DelButton> : ""}
+                {hoverRoomID === room.id ? (
+                  <DelButton onClick={(e) => ChatRoomDeleteHandler(e)}>
+                    X
+                  </DelButton>
+                ) : (
+                  ""
+                )}
               </Del>
             </ChatList>
           ))}
