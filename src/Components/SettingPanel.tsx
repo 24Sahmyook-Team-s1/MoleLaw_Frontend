@@ -9,6 +9,7 @@ import { AnimatedInputArea } from "./Common/AnimationArea";
 import { TermsOfUseText } from "../Data/TermsofUse";
 import { InputArea, InputAreaField, InputAreaText } from "./Common/InputArea";
 import QuitPopup from "./QuitPopup";
+import { useToastStore } from "../store/toast";
 
 const Panel = styled.div<{ show: boolean }>`
   position: fixed;
@@ -166,29 +167,6 @@ const InputAreaDivider = styled.div`
   gap: 5px;
 `;
 
-const ToastPopup = styled.div<{ toast: boolean }>`
-  position: fixed;
-  left: 50%;
-  transform: ${({ toast }) =>
-    toast ? "translate(-50%, -30%)" : "translate(-50%, -250%)"};
-  transition: transform 0.2s ease-in-out;
-
-  width: fit-content;
-  height: 22px;
-  box-sizing: border-box;
-  padding: 20px 20px;
-  background-color: #000000dd;
-  backdrop-filter: blur(20px);
-  border: 1px solid ${Stroke};
-  color: white;
-  border-radius: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 18px;
-  font-family: Pretendard;
-`;
-
 interface Props {
   show: boolean;
   showHandle: () => void;
@@ -196,17 +174,16 @@ interface Props {
 
 const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
   const { user, changeNickname, changePassword } = useAuthStore();
+  const { showToast } = useToastStore();
 
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [newNickname, setNewNickname] = useState("");
-  const [toastText, setToastText] = useState("");
 
   const [nameClick, setNameClick] = useState(false);
   const [passwordClick, setPasswordClick] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [quitClick, setQuitClick] = useState(false);
-  const [toastOn, settoastOn] = useState(false);
 
   useEffect(() => {
     if (!show) {  
@@ -214,29 +191,19 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
     }
   }, [show]);
 
-  const handleToast = () => {
-    const TimerHandler = () => {
-      settoastOn(false);
-    };
-    settoastOn(true);
-    setTimeout(TimerHandler, 1.5 * 1000);
-  };
-
   const handleNewNickname = async () => {
     const msg = await changeNickname(newNickname);
-    setToastText(msg);
     setNewNickname("");
     setNameClick(false);
-    handleToast();
+    showToast(msg);
   };
 
   const handleNewPassword = async () => {
     const msg = await changePassword(password);
-    setToastText(msg);
     setPassword("");
     setPasswordCheck("");
     setPasswordClick(false);
-    handleToast();
+    showToast(msg);
   }
 
   return (
@@ -350,8 +317,7 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
                       if (password === passwordCheck) {
                         handleNewPassword();
                       } else {
-                        setToastText("패스워드가 일치하지 않습니다");
-                        handleToast();
+                        showToast("패스워드가 일치하지 않습니다");
                       }
                     }}
                   >
@@ -382,7 +348,6 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
         </TermsOfUseArea>
       </Wrapper>
       <QuitPopup show={quitClick && show} />
-      <ToastPopup toast={toastOn}>{toastText}</ToastPopup>
     </Panel>
   );
 };

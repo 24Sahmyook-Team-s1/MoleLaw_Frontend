@@ -82,7 +82,9 @@ const QuitPopup:React.FC<Props> = ({show}) => {
     const [email, setEmail] = useState("");
 
     const handleQuit = () => {
-        if (email === user?.email) quit() ;
+        if (email === user?.email) {
+            setTimeout(async () => { await quit()},1500);
+        }
     }
 
     return(

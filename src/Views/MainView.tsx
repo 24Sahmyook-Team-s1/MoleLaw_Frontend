@@ -14,6 +14,7 @@ import {
 import ReactMarkDown, { type Components } from "react-markdown";
 import InfoBubble from "../Components/ChattingSystem/InfoBubble";
 import { keyframes } from "@emotion/react";
+import Toast from "../Components/Toast";
 
 const Wrapper = styled.div`
   display: grid;
@@ -258,6 +259,7 @@ const MainView: React.FC = () => {
           />
         </Bottom>
       </Wrapper>
+      <Toast/>
     </Background>
   );
 };
