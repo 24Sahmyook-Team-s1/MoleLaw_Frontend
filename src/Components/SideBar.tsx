@@ -54,16 +54,11 @@ const Chats = styled.div`
   
   /* Chrome, Safari, Edge 기반 브라우저 전용 */
   &::-webkit-scrollbar {
-    width: 10px;
+    display: none;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: ${PointHighlight};
-    border-radius: 20px;
-  }
-
-  &:hover::-webkit-scrollbar-thumb {
-    background-color: ${Point};
+    display:none;
   }
 `;
 
