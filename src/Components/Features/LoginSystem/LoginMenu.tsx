@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { FcGoogle } from "react-icons/fc";
-import { Sub } from "../../style/Colors";
-import { useAuthStore } from "../../store/storeIndex"
+import { Sub } from "../../../style/colors";
+import { useAuthStore } from "../../../store/storeIndex"
 
 const Panel = styled.div`
   width: 500px;

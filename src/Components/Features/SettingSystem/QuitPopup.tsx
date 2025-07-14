@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
-import { Stroke } from "../style/Colors";
-import { InputArea, InputAreaField, InputAreaText } from "./Common/InputArea";
-import { useAuthStore } from "../store/storeIndex"
+import { Stroke } from "../../../style/colors";
+import { InputArea, InputAreaField, InputAreaText } from "../../UI/InputArea";
+import { useAuthStore } from "../../../store/storeIndex"
 import { useState } from "react";
 
 const Wrapper = styled.div<{ show: boolean }>`

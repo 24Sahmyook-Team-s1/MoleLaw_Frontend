@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
-import { Stroke } from "../style/Colors";
-import { useToastStore } from "../store/utils/ToastStore";
+import { Stroke } from "../../style/colors";
+import { useToastStore } from "../../store/utils/toastStore";
 
 const ToastPopup = styled.div<{ toast: boolean }>`
   position: fixed;

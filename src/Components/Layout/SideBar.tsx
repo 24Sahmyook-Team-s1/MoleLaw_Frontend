@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
-import { MainColor, Point, PointHighlight, Text } from "../style/Colors";
+import { MainColor, Point, PointHighlight, Text } from "../../style/colors";
 import { useEffect, useRef, useState } from "react";
-import ProfilePanel from "./ProfilePanel";
-import SettingPanel from "./SettingPanel";
-import { useDataStore } from "../store/storeIndex";
+import ProfilePanel from "../Features/ProfilePanel";
+import SettingPanel from "../Features/SettingSystem/SettingPanel";
+import { useDataStore } from "../../store/storeIndex";
 
 const Wrapper = styled.div<{ hold: boolean }>`
   width: ${({ hold }) => (hold ? "400px" : "110px")};

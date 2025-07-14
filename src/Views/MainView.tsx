@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
-import Background from "../Components/Background";
-import SideBar from "../Components/SideBar";
-import ChattingBar from "../Components/ChattingSystem/ChattingBar";
+import Background from "../Components/Layout/Background";
+import SideBar from "../Components/Layout/SideBar";
+import ChattingBar from "../Components/Features/ChattingSystem/ChattingBar";
 import { useEffect, useRef } from "react";
-import { Text } from "../style/Colors";
-import ChatBubble from "../Components/ChattingSystem/ChatBubble";
+import { Text } from "../style/colors";
+import ChatBubble from "../Components/Features/ChattingSystem/ChatBubble";
 import {
   useAuthStore,
   useDataStore,
@@ -12,9 +12,9 @@ import {
   useQuestionStore,
 } from "../store/storeIndex"
 import ReactMarkDown, { type Components } from "react-markdown";
-import InfoBubble from "../Components/ChattingSystem/InfoBubble";
+import InfoBubble from "../Components/Features/ChattingSystem/InfoBubble";
 import { keyframes } from "@emotion/react";
-import Toast from "../Components/Toast";
+import Toast from "../Components/UI/Toast";
 
 const Wrapper = styled.div`
   display: grid;

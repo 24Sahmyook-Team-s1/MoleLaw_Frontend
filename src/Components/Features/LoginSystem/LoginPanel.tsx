@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Stroke, Text } from "../../style/Colors";
+import { Stroke, Text } from "../../../style/colors";
 import LoginMenu from "./LoginMenu";
 import { useEffect, useState } from "react";
 import Signin from "./Signin";

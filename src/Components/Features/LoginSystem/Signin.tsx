@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
-import { MainColor, Sub } from "../../style/Colors";
+import { MainColor, Sub } from "../../../style/colors";
 import { useEffect, useState } from "react";
 import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
-import { useAuthStore } from "../../store/storeIndex"
-import { TtoDFadeAnimationArea } from "../Common/AnimationArea";
-import { InputArea, InputAreaField, InputAreaText } from "../Common/InputArea";
+import { useAuthStore } from "../../../store/storeIndex"
+import { TtoDFadeAnimationArea } from "../../UI/AnimationArea";
+import { InputArea, InputAreaField, InputAreaText } from "../../UI/InputArea";
 
 const Panel = styled.div`
   width: 500px;

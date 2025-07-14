@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
-import { MainColor } from "../../style/Colors";
+import { MainColor } from "../../../style/colors";
 import ReactMarkDown from "react-markdown";
-import { TermsOfUseText } from "../../Data/TermsofUse";
+import { TermsOfUseText } from "../../../data/TermsofUse";
 
 const Panel = styled.div`
   width: 500px;

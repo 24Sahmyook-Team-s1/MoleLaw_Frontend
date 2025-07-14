@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Light } from "../style/Colors";
+import { Light } from "../../style/colors";
 import React from "react";
 
 

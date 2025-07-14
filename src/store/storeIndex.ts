@@ -10,4 +10,4 @@ export { useDataStore } from './data/dataStore';
 export { useQuestionStore } from './chat/questionStore';
 
 //토스트 팝업 관련 훅
-export { useToastStore } from './utils/ToastStore';
+export { useToastStore } from './utils/toastStore';

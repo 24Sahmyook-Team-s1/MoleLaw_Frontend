@@ -1,12 +1,11 @@
 import './App.css'
 import { Global } from '@emotion/react'
-import { GlobalStyles } from './style/GlobalStyle'
+import { GlobalStyles } from './style/globalStyle'
 import { BrowserRouter } from 'react-router-dom'
-import Router from './Routes'
+import Router from './routes'
 import { useEffect, useState, type ReactNode } from 'react'
 import { useAuthStore } from "./store/storeIndex"
-import LoginPanel from './Components/LoginSystem/LoginPanel'
-//import LoginPanel from './Components/LoginPanel'
+import LoginPanel from './Components/Features/LoginSystem/LoginPanel'
 
 interface props{
   children : ReactNode;

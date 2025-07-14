@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Text } from "../../style/Colors";
+import { Text } from "../../style/colors";
 
 export const InputArea = styled.div`
   width: 300px;

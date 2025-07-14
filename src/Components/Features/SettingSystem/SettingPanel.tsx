@@ -1,15 +1,15 @@
 import styled from "@emotion/styled";
-import { useAuthStore } from "../store/storeIndex"
-import { Stroke, Sub, Text } from "../style/Colors";
+import { useAuthStore } from "../../../store/storeIndex"
+import { Stroke, Sub, Text } from "../../../style/colors";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash, FaRegSave } from "react-icons/fa";
-import { LtoRSlideAnimationArea } from "./Common/AnimationArea";
-import { TermsOfUseText } from "../Data/TermsofUse";
-import { InputArea, InputAreaField, InputAreaText } from "./Common/InputArea";
+import { LtoRSlideAnimationArea } from "../../UI/AnimationArea";
+import { TermsOfUseText } from "../../../data/TermsofUse";
+import { InputArea, InputAreaField, InputAreaText } from "../../UI/InputArea";
 import QuitPopup from "./QuitPopup";
-import { useToastStore } from "../store/utils/ToastStore";
+import { useToastStore } from "../../../store/utils/toastStore";
 
 const Panel = styled.div<{ show: boolean }>`
   position: fixed;
