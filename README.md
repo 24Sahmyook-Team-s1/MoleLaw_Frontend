@@ -1,6 +1,8 @@
 # MoleLaw
 법률 API와 연계한 AI 기반 법률 조언 서비스.
 
+- *본 ReadMe 에선 Frontend 중심의 사항을 다룹니다. Backend와 관련된 사항은 https://github.com/24Sahmyook-Team-s1/MoleLaw_backend 해당 레포지토리에서 확인하실 수 있습니다.*
+
 ## 개요
 
 법은 어렵습니다. 현행 법령만 5,943건<br>
@@ -11,6 +13,31 @@
 저희는 이런 생각을 합니다. '*법을 사람이 모두 알기에 어려움이 있다면, 단순히 법을 찾고 적용 가능성을 확인하는걸 도와줄 파트너가 있다면 사람들의 부담이 줄어들지 않을까?*' 하고요.
 
 그래서 저희는 국가 법령 정보센터에서 제공하는 법률 API 와 AI 서비스를 연동하여, 실제 법률에 기반한 조언 서비스 **MoleLaw** 를 개발하게 되었습니다.
+
+## 팀원
+
+김정현 (@ranpia) | Lead
+- Backend 코드 총괄
+- Backend Server Engineer
+- Project Management
+- API Management
+
+차성호 (@WhiteMilk357) | Backend Engineer
+- Backend Enginner
+- Chatbot System
+- System Architecture
+
+박민수 (@OdeliaRoav) | Backend Engineer
+- Backend Engineer
+- Data Encryption
+- Authorization System
+
+김재욱 (@Jaek-Kein) | Frontend Engineer
+- Frontend Design
+- Frontend Development
+- Frontend Server Enginner
+- Service Architecture Design
+
 
 ## 서비스 아키텍쳐
 ![시스템 아키텍쳐](./public/시스템아키텍쳐.webp)
@@ -49,3 +76,5 @@
 <br>
 
 ## 디자인
+
+디자인을 하면서 
