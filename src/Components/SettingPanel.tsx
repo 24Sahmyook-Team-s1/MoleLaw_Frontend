@@ -9,7 +9,7 @@ import { LtoRSlideAnimationArea } from "./Common/AnimationArea";
 import { TermsOfUseText } from "../Data/TermsofUse";
 import { InputArea, InputAreaField, InputAreaText } from "./Common/InputArea";
 import QuitPopup from "./QuitPopup";
-import { useToastStore } from "../store/toast";
+import { useToastStore } from "../store/ToastStore";
 
 const Panel = styled.div<{ show: boolean }>`
   position: fixed;
