@@ -2,8 +2,8 @@ import { create } from "zustand";
 import type { Message, QuestionStore } from "../types";
 import axios, { AxiosError } from "axios";
 import { API_BASE_URL } from "../constants";
-import { useDataStore } from "../Data/dataStore";
-import { useMessageStore } from "../Data/messageStore";
+import { useDataStore } from "../data/dataStore";
+import { useMessageStore } from "../data/messageStore";
 
 export const useQuestionStore = create<QuestionStore>((set) => ({
   response: null,

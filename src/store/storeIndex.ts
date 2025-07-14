@@ -3,8 +3,8 @@
 export { useAuthStore } from "./auth/authStore";
 
 //데이터 관련 hook
-export { useMessageStore } from './Data/messageStore';
-export { useDataStore } from './Data/dataStore';
+export { useMessageStore } from './data/messageStore';
+export { useDataStore } from './data/dataStore';
 
 //챗봇 시스템 관련 hook
 export { useQuestionStore } from './chat/questionStore';
