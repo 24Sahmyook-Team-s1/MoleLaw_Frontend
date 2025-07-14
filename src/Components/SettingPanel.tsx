@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash, FaRegSave } from "react-icons/fa";
-import { AnimatedInputArea } from "./Common/AnimationArea";
+import { LtoRSlideAnimationArea } from "./Common/AnimationArea";
 import { TermsOfUseText } from "../Data/TermsofUse";
 import { InputArea, InputAreaField, InputAreaText } from "./Common/InputArea";
 import QuitPopup from "./QuitPopup";
@@ -226,7 +226,7 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
               변경
             </ChangeButton>
           </OptionStyle>
-          <AnimatedInputArea show={nameClick}>
+          <LtoRSlideAnimationArea show={nameClick}>
             {nameClick && (
               <InputArea
                 style={{ justifySelf: "flex-end", marginBottom: "10px" }}
@@ -250,7 +250,7 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
                 </InputAreaDivider>
               </InputArea>
             )}
-          </AnimatedInputArea>
+          </LtoRSlideAnimationArea>
           <OptionStyle>
             프로필 사진 변경
             <ChangeButton> 변경 </ChangeButton>
@@ -265,7 +265,7 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
               변경{" "}
             </ChangeButton>
           </OptionStyle>
-          <AnimatedInputArea show={passwordClick}>
+          <LtoRSlideAnimationArea show={passwordClick}>
             {passwordClick && (
               <InputArea
                 style={{ justifySelf: "flex-end", marginBottom: "10px" }}
@@ -294,8 +294,8 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
                 </InputAreaDivider>
               </InputArea>
             )}
-          </AnimatedInputArea>
-          <AnimatedInputArea show={Boolean(password)}>
+          </LtoRSlideAnimationArea>
+          <LtoRSlideAnimationArea show={Boolean(password)}>
             {password && passwordClick && (
               <InputArea
                 style={{ justifySelf: "flex-end", marginBottom: "10px" }}
@@ -326,7 +326,7 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
                 </InputAreaDivider>
               </InputArea>
             )}
-          </AnimatedInputArea>
+          </LtoRSlideAnimationArea>
           <OptionStyle>
             회원 탈퇴
             <ChangeButton

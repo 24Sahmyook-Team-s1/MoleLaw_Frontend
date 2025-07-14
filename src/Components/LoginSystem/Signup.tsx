@@ -3,7 +3,7 @@ import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { MainColor, Sub, Text } from "../../style/Colors";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../../store/states";
-import { AnimatedSignArea } from "../Common/AnimationArea";
+import { TtoDFadeAnimationArea } from "../Common/AnimationArea";
 import { InputArea, InputAreaField, InputAreaText } from "../Common/InputArea";
 
 const Panel = styled.div`
@@ -176,7 +176,7 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
         </InputArea>
       </Area>
       {email && (
-        <AnimatedSignArea show={render1}>
+        <TtoDFadeAnimationArea show={render1}>
           <Area>
             <InputArea>
               <InputAreaText>닉네임</InputAreaText>
@@ -187,10 +187,10 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
               />
             </InputArea>
           </Area>
-        </AnimatedSignArea>
+        </TtoDFadeAnimationArea>
       )}
       {nickname && (
-        <AnimatedSignArea show={render2}>
+        <TtoDFadeAnimationArea show={render2}>
           <Area>
             <InputArea>
               <InputAreaText>비밀번호</InputAreaText>
@@ -217,10 +217,10 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
               </InputAreaDivider>
             </InputArea>
           </Area>
-        </AnimatedSignArea>
+        </TtoDFadeAnimationArea>
       )}
       {password && (
-        <AnimatedSignArea show={render3}>
+        <TtoDFadeAnimationArea show={render3}>
           <Area>
             <InputArea>
               <InputAreaText>비밀번호 확인</InputAreaText>
@@ -231,10 +231,10 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
               />
             </InputArea>
           </Area>
-        </AnimatedSignArea>
+        </TtoDFadeAnimationArea>
       )}
       {passwordCheck && (
-        <AnimatedSignArea show={render4}>
+        <TtoDFadeAnimationArea show={render4}>
           <Area style={{ marginTop: "30px", boxSizing: "border-box" }}>
             <TermsOfUse>
               <TermsText onClick={terms}>
@@ -255,7 +255,7 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
               <Error>이용 약관에 동의해주십쇼</Error>
             )}
           </Area>
-        </AnimatedSignArea>
+        </TtoDFadeAnimationArea>
       )}
     </Panel>
   );

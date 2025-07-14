@@ -3,7 +3,7 @@ import { MainColor, Sub } from "../../style/Colors";
 import { useEffect, useState } from "react";
 import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuthStore } from "../../store/states";
-import { AnimatedSignArea } from "../Common/AnimationArea";
+import { TtoDFadeAnimationArea } from "../Common/AnimationArea";
 import { InputArea, InputAreaField, InputAreaText } from "../Common/InputArea";
 
 const Panel = styled.div`
@@ -133,7 +133,7 @@ const Signin: React.FC<Props> = ({ onArrowClick, handleSignup }) => {
         </InputArea>
       </Area>
       {email && (
-        <AnimatedSignArea show={passwordRenderer}>
+        <TtoDFadeAnimationArea show={passwordRenderer}>
           <Area>
             <InputArea>
               <InputAreaText>비밀번호</InputAreaText>
@@ -173,16 +173,16 @@ const Signin: React.FC<Props> = ({ onArrowClick, handleSignup }) => {
               </div>
             </InputArea>
           </Area>
-        </AnimatedSignArea>
+        </TtoDFadeAnimationArea>
       )}
       {password && (
-        <AnimatedSignArea show={loginRenderer}>
+        <TtoDFadeAnimationArea show={loginRenderer}>
           <Area>
             <LoginButton onClick={() => LocalLogin(email, password)}>
               로그인
             </LoginButton>
           </Area>
-        </AnimatedSignArea>
+        </TtoDFadeAnimationArea>
       )}
       <SigninArea style={{ fontFamily: "pretendard" }}>
         계정이 아직 없다면?
