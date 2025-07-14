@@ -7,9 +7,10 @@ import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash, FaRegSave } from "react-icons/fa";
 import { LtoRSlideAnimationArea } from "../../UI/AnimationArea";
 import { TermsOfUseText } from "../../../data/TermsofUse";
-import { InputArea, InputAreaField, InputAreaText } from "../../UI/InputArea";
+import CustomInput from "../../UI/InputArea";
 import QuitPopup from "./QuitPopup";
 import { useToastStore } from "../../../store/utils/toastStore";
+import { css } from "@emotion/react";
 
 const Panel = styled.div<{ show: boolean }>`
   position: fixed;
@@ -160,12 +161,10 @@ const TermsOfUse = styled.div`
   }
 `;
 
-const InputAreaDivider = styled.div`
-  display: grid;
-  grid-template-columns: 1fr auto;
-  width: 100%;
-  gap: 5px;
-`;
+const InputAlignment = css`
+  margin-bottom: 10px;
+  justify-self: flex-end;
+`
 
 interface Props {
   show: boolean;
@@ -199,11 +198,15 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
   };
 
   const handleNewPassword = async () => {
-    const msg = await changePassword(password);
-    setPassword("");
-    setPasswordCheck("");
-    setPasswordClick(false);
-    showToast(msg);
+    if(password === passwordCheck){
+      const msg = await changePassword(password);
+      setPassword("");
+      setPasswordCheck("");
+      setPasswordClick(false);
+      showToast(msg);
+    } else{
+      showToast("패스워드가 일치하지 않습니다.")
+    }
   }
 
   return (
@@ -228,27 +231,14 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
           </OptionStyle>
           <LtoRSlideAnimationArea show={nameClick}>
             {nameClick && (
-              <InputArea
-                style={{ justifySelf: "flex-end", marginBottom: "10px" }}
-              >
-                <InputAreaText>변경할 이름</InputAreaText>
-                <InputAreaDivider>
-                  <InputAreaField
-                    value={newNickname}
-                    onChange={(e) => setNewNickname(e.target.value)}
-                  />
-                  <button
-                    style={{
-                      backgroundColor: "transparent",
-                      padding: "0",
-                      margin: "0",
-                    }}
-                    onClick={handleNewNickname}
-                  >
-                    <FaRegSave color="black" />
-                  </button>
-                </InputAreaDivider>
-              </InputArea>
+            <CustomInput
+              inputType={"text"}
+              inputName={"새로운 닉네임"}
+              Icon={FaRegSave}
+              onChange={(e) => setNewNickname(e.target.value)}
+              IconJob={() => handleNewNickname()}
+              CustomStyle={InputAlignment}
+            />
             )}
           </LtoRSlideAnimationArea>
           <OptionStyle>
@@ -267,64 +257,26 @@ const SettingPanel: React.FC<Props> = ({ show, showHandle }) => {
           </OptionStyle>
           <LtoRSlideAnimationArea show={passwordClick}>
             {passwordClick && (
-              <InputArea
-                style={{ justifySelf: "flex-end", marginBottom: "10px" }}
-              >
-                <InputAreaText>새로운 비밀번호</InputAreaText>
-                <InputAreaDivider>
-                  <InputAreaField
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <button
-                    style={{
-                      backgroundColor: "transparent",
-                      padding: "0",
-                      margin: "0",
-                    }}
-                    onClick={() => setShowPassword((prev) => !prev)}
-                  >
-                    {showPassword ? (
-                      <FaEye color="black" display="block" />
-                    ) : (
-                      <FaEyeSlash color="black" display="block" />
-                    )}
-                  </button>
-                </InputAreaDivider>
-              </InputArea>
+            <CustomInput
+              inputType={showPassword ? "text" : "password"}
+              inputName={"비밀번호"}
+              Icon={ showPassword ? FaEye : FaEyeSlash}
+              onChange={(e) => setPassword(e.target.value)}
+              IconJob={() => setShowPassword((prev) => !prev)}
+              CustomStyle={InputAlignment}
+            />
             )}
           </LtoRSlideAnimationArea>
           <LtoRSlideAnimationArea show={Boolean(password)}>
             {password && passwordClick && (
-              <InputArea
-                style={{ justifySelf: "flex-end", marginBottom: "10px" }}
-              >
-                <InputAreaText>비밀번호 확인</InputAreaText>
-                <InputAreaDivider>
-                  <InputAreaField
-                    type={showPassword ? "text" : "password"}
-                    value={passwordCheck}
-                    onChange={(e) => setPasswordCheck(e.target.value)}
-                  />
-                  <button
-                    style={{
-                      backgroundColor: "transparent",
-                      padding: "0",
-                      margin: "0",
-                    }}
-                    onClick={() => {
-                      if (password === passwordCheck) {
-                        handleNewPassword();
-                      } else {
-                        showToast("패스워드가 일치하지 않습니다");
-                      }
-                    }}
-                  >
-                    <FaRegSave color="black" />
-                  </button>
-                </InputAreaDivider>
-              </InputArea>
+            <CustomInput
+              inputType={showPassword ? "text" : "password"}
+              inputName={"비밀번호 확인"}
+              Icon={ FaRegSave }
+              onChange={(e) => setPasswordCheck(e.target.value)}
+              IconJob={() => handleNewPassword()}
+              CustomStyle={InputAlignment}
+            />
             )}
           </LtoRSlideAnimationArea>
           <OptionStyle>

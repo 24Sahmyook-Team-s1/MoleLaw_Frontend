@@ -2,9 +2,9 @@ import styled from "@emotion/styled";
 import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { MainColor, Sub, Text } from "../../../style/colors";
 import { useEffect, useState } from "react";
-import { useAuthStore } from "../../../store/storeIndex"
+import { useAuthStore } from "../../../store/storeIndex";
 import { TtoDFadeAnimationArea } from "../../UI/AnimationArea";
-import { InputArea, InputAreaField, InputAreaText } from "../../UI/InputArea";
+import CustomInput  from "../../UI/InputArea";
 
 const Panel = styled.div`
   width: 500px;
@@ -72,7 +72,7 @@ const SignupButton = styled.button`
   align-items: center;
   color: white;
 
-  &:active{
+  &:active {
     transform: scale(0.95);
   }
 `;
@@ -80,13 +80,6 @@ const SignupButton = styled.button`
 const Error = styled.span`
   color: red;
   font-size: 14px;
-`;
-
-const InputAreaDivider = styled.div`
-  display: grid;
-  grid-template-columns: 1fr auto;
-  width: 100%;
-  gap: 5px;
 `;
 
 function isValidEmail(email: string) {
@@ -130,13 +123,12 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
   }, [email, nickname, password, passwordCheck]);
 
   const HandleSignup = async () => {
-
     const isEmailValid = email.length > 0 && isValidEmail(email);
     const isPasswordValid = password.length > 0;
     const isPasswordMatch = password === passwordCheck;
     const isTermsAccepted = termsCheck;
 
-    setEmailError(!isEmailValid); 
+    setEmailError(!isEmailValid);
     setPasswordError(!isPasswordMatch || !isPasswordValid);
     setTermsError(!isTermsAccepted);
 
@@ -166,70 +158,44 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
       </button>
       <SigninTitle>회원가입</SigninTitle>
       <Area>
-        <InputArea>
-          <InputAreaText>이메일</InputAreaText>
-          <InputAreaField
-            type="email"
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </InputArea>
+            <CustomInput
+              inputType={"email"}
+              inputName={"이메일"}
+              onChange={(e) => setEmail(e.target.value)}
+            />
       </Area>
       {email && (
         <TtoDFadeAnimationArea show={render1}>
           <Area>
-            <InputArea>
-              <InputAreaText>닉네임</InputAreaText>
-              <InputAreaField
-                type="nickname"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
-              />
-            </InputArea>
+            <CustomInput
+              inputType={"text"}
+              inputName={"닉네임"}
+              onChange={(e) => setNickname(e.target.value)}
+            />
           </Area>
         </TtoDFadeAnimationArea>
       )}
       {nickname && (
         <TtoDFadeAnimationArea show={render2}>
           <Area>
-            <InputArea>
-              <InputAreaText>비밀번호</InputAreaText>
-              <InputAreaDivider>
-                <InputAreaField
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                  style={{
-                    backgroundColor: "transparent",
-                    padding: "0",
-                    margin: "0",
-                  }}
-                  onClick={() => setShowPassword((prev) => !prev)}
-                >
-                  {showPassword ? (
-                    <FaEye color="black" display="block" />
-                  ) : (
-                    <FaEyeSlash color="black" display="block" />
-                  )}
-                </button>
-              </InputAreaDivider>
-            </InputArea>
+            <CustomInput
+              inputType={showPassword ? "text" : "password"}
+              inputName={"비밀번호"}
+              Icon={ showPassword ? FaEye : FaEyeSlash}
+              onChange={(e) => setPassword(e.target.value)}
+              IconJob={() => setShowPassword((prev) => !prev)}
+            />
           </Area>
         </TtoDFadeAnimationArea>
       )}
       {password && (
         <TtoDFadeAnimationArea show={render3}>
           <Area>
-            <InputArea>
-              <InputAreaText>비밀번호 확인</InputAreaText>
-              <InputAreaField
-                type={showPassword ? "text" : "password"}
-                value={passwordCheck}
-                onChange={(e) => setPasswordCheck(e.target.value)}
-              />
-            </InputArea>
+            <CustomInput
+              inputType={showPassword ? "text" : "password"}
+              inputName={"비밀번호 확인"}
+              onChange={(e) => setPasswordCheck(e.target.value)}
+            />
           </Area>
         </TtoDFadeAnimationArea>
       )}

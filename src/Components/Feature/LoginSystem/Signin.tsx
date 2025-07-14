@@ -2,9 +2,9 @@ import styled from "@emotion/styled";
 import { MainColor, Sub } from "../../../style/colors";
 import { useEffect, useState } from "react";
 import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
-import { useAuthStore } from "../../../store/storeIndex"
+import { useAuthStore } from "../../../store/storeIndex";
 import { TtoDFadeAnimationArea } from "../../UI/AnimationArea";
-import { InputArea, InputAreaField, InputAreaText } from "../../UI/InputArea";
+import CustomInput from "../../UI/InputArea";
 
 const Panel = styled.div`
   width: 500px;
@@ -53,7 +53,7 @@ const LoginButton = styled.button`
   font-family: pretendard;
   font-size: 16px;
 
-  &:active{
+  &:active {
     transform: scale(0.95);
   }
 `;
@@ -96,10 +96,6 @@ const Signin: React.FC<Props> = ({ onArrowClick, handleSignup }) => {
     else setLoginRenderer(false);
   }, [password]);
 
-  const handleShowPassword = () => {
-    setShowPassword((prev) => !prev);
-  };
-
   return (
     <Panel>
       <button
@@ -123,55 +119,22 @@ const Signin: React.FC<Props> = ({ onArrowClick, handleSignup }) => {
         </div>
       </Logo>
       <Area>
-        <InputArea>
-          <InputAreaText>이메일</InputAreaText>
-          <InputAreaField
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </InputArea>
+        <CustomInput
+          inputType={"email"}
+          inputName={"이메일"}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </Area>
       {email && (
         <TtoDFadeAnimationArea show={passwordRenderer}>
           <Area>
-            <InputArea>
-              <InputAreaText>비밀번호</InputAreaText>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr auto",
-                  width: "100%",
-                  gap: "5px",
-                }}
-              >
-                <InputAreaField
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault(); // 줄바꿈 방지
-                      LocalLogin(email, password);
-                    }
-                  }}
-                />
-                <button
-                  style={{
-                    padding: "0",
-                    margin: "0",
-                    backgroundColor: "transparent",
-                  }}
-                  onClick={handleShowPassword}
-                >
-                  {showPassword ? (
-                    <FaEye color="black" display="block" />
-                  ) : (
-                    <FaEyeSlash color="black" display="block" />
-                  )}
-                </button>
-              </div>
-            </InputArea>
+            <CustomInput
+              inputType={showPassword ? "text" : "password"}
+              inputName={"비밀번호"}
+              Icon={ showPassword ? FaEye : FaEyeSlash}
+              onChange={(e) => setPassword(e.target.value)}
+              IconJob={() => setShowPassword((prev) => !prev)}
+            />
           </Area>
         </TtoDFadeAnimationArea>
       )}
