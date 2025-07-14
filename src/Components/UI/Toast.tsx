@@ -29,7 +29,7 @@ const ToastPopup = styled.div<{ toast: boolean }>`
 const Toast: React.FC = () => {
   const { message, visible } = useToastStore();
   return (
-    <ToastPopup toast={visible}>
+    <ToastPopup toast={visible} role="alert" aria-live="assertive">
       {message}
     </ToastPopup>
   );

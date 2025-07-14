@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import Background from "../Components/Layout/Background";
 import SideBar from "../Components/Layout/SideBar";
 import ChattingBar from "../Components/Feature/ChattingSystem/ChattingBar";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Text } from "../style/colors";
 import ChatBubble from "../Components/Feature/ChattingSystem/ChatBubble";
 import {
@@ -164,7 +164,7 @@ const MainView: React.FC = () => {
     };
   }, [user, refreshToken]);
 
-  const handleAsk = async (msg: string) => {
+  const handleAsk = useCallback(async (msg: string) => {
     addMessage({ sender: "USER", content: msg });
 
 
@@ -174,7 +174,7 @@ const MainView: React.FC = () => {
       await askQuestion(msg);
     }
     getChatRoom();
-  };
+  },[selectedChatRoomID, getChatRoom, addMessage, askQuestion, continueQuestion]);
 
   return (
     <Background>
