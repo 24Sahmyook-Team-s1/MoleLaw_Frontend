@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useAuthStore } from "../store/states";
+import { useAuthStore } from "../store/storeIndex"
 import { Stroke, Sub, Text } from "../style/Colors";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -9,7 +9,7 @@ import { LtoRSlideAnimationArea } from "./Common/AnimationArea";
 import { TermsOfUseText } from "../Data/TermsofUse";
 import { InputArea, InputAreaField, InputAreaText } from "./Common/InputArea";
 import QuitPopup from "./QuitPopup";
-import { useToastStore } from "../store/ToastStore";
+import { useToastStore } from "../store/utils/ToastStore";
 
 const Panel = styled.div<{ show: boolean }>`
   position: fixed;

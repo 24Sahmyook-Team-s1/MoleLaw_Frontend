@@ -9,8 +9,8 @@ import {
   useAuthStore,
   useDataStore,
   useMessageStore,
-  useQuestionAPI,
-} from "../store/states";
+  useQuestionStore,
+} from "../store/storeIndex"
 import ReactMarkDown, { type Components } from "react-markdown";
 import InfoBubble from "../Components/ChattingSystem/InfoBubble";
 import { keyframes } from "@emotion/react";
@@ -122,7 +122,7 @@ const LoadingText = styled.div`
 const MainView: React.FC = () => {
   const { getChatRoom, selectedChatRoomID } = useDataStore();
   const { messages, addMessage } = useMessageStore();
-  const { askQuestion, loading, continueQuestion } = useQuestionAPI();
+  const { askQuestion, loading, continueQuestion } = useQuestionStore();
   const { user, refreshToken } = useAuthStore();
   const middleRef = useRef<HTMLDivElement>(null);
 

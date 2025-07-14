@@ -4,7 +4,7 @@ import { GlobalStyles } from './style/GlobalStyle'
 import { BrowserRouter } from 'react-router-dom'
 import Router from './Routes'
 import { useEffect, useState, type ReactNode } from 'react'
-import { useAuthStore } from './store/states'
+import { useAuthStore } from "./store/storeIndex"
 import LoginPanel from './Components/LoginSystem/LoginPanel'
 //import LoginPanel from './Components/LoginPanel'
 

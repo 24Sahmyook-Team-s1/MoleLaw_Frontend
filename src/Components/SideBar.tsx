@@ -3,7 +3,7 @@ import { MainColor, Point, PointHighlight, Text } from "../style/Colors";
 import { useEffect, useRef, useState } from "react";
 import ProfilePanel from "./ProfilePanel";
 import SettingPanel from "./SettingPanel";
-import { useDataStore } from "../store/states";
+import { useDataStore } from "../store/storeIndex";
 
 const Wrapper = styled.div<{ hold: boolean }>`
   width: ${({ hold }) => (hold ? "400px" : "110px")};

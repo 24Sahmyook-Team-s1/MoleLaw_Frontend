@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import { Point } from "../style/Colors"
-import { useAuthStore } from "../store/states"
+import { useAuthStore } from "../store/storeIndex"
 
 const Wrapper = styled.div<{show:boolean}>`
     width: 305px;

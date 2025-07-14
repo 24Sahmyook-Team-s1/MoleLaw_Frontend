@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { MainColor, Sub, Text } from "../../style/Colors";
 import { useEffect, useState } from "react";
-import { useAuthStore } from "../../store/states";
+import { useAuthStore } from "../../store/storeIndex"
 import { TtoDFadeAnimationArea } from "../Common/AnimationArea";
 import { InputArea, InputAreaField, InputAreaText } from "../Common/InputArea";
 
