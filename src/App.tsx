@@ -2,7 +2,7 @@ import './App.css'
 import { Global } from '@emotion/react'
 import { GlobalStyles } from './style/globalStyle'
 import { BrowserRouter } from 'react-router-dom'
-import Router from './routes'
+import Router from './routes/index'
 import { useEffect, useState, type ReactNode } from 'react'
 import { useAuthStore } from "./store/storeIndex"
 import LoginPanel from './Components/Feature/LoginSystem/LoginPanel'
