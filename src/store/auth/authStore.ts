@@ -72,8 +72,15 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         user: res.data,
         isLoading: false,
       });
-    } catch {
+      return "가입 성공";
+    } catch (error) {
       set({ isLoading: false });
+      const err = error as AxiosError;
+      if(err.status === 400){
+        return "이미 가입한 이메일입니다."
+      } else if (err.status === 500){
+        return "가입에 실패했습니다, 다시 시도해주세요"
+      } else return "가입 실패";
     }
   },
 
@@ -90,11 +97,18 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
           withCredentials: true,
         }
       );
-
+      
       // 로그인 성공 시 처리
       await get().checkAuthStatus();
-    } catch {
+      return "로그인 성공";
+    } catch (error){
       set({ isLoading: false });
+      const err = error as AxiosError;
+      if(err?.status === 400){
+          return "비밀번호가 틀립니다."
+      }else if (err?.status === 502) {
+          return "존재하지 않는 이메일 입니다."
+      } else return "로그인 실패";
     }
   },
 

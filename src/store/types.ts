@@ -49,12 +49,12 @@ export interface AuthStore {
   googleLogin: () => void;
   kakaoLogin: () => void;
   logout: () => Promise<boolean>;
-  LocalLogin: (email: string, password: string) => Promise<void>;
+  LocalLogin: (email: string, password: string) => Promise<string>;
   LocalSignUp: (
     email: string,
     password: string,
     nickname: string
-  ) => Promise<void>;
+  ) => Promise<string>;
   quit: () => Promise<boolean>;
   refreshToken: () => Promise<boolean>;
   changeNickname: (newNickName: string) => Promise<string>;

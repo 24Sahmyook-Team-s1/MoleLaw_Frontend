@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { MainColor, Sub } from "../../../style/colors";
 import { useEffect, useState } from "react";
 import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
-import { useAuthStore } from "../../../store/storeIndex";
+import { useAuthStore, useToastStore } from "../../../store/storeIndex";
 import { TtoDFadeAnimationArea } from "../../UI/AnimationArea";
 import CustomInput from "../../UI/InputArea";
 
@@ -85,6 +85,12 @@ const Signin: React.FC<Props> = ({ onArrowClick, handleSignup }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const { LocalLogin } = useAuthStore();
+  const { showToast } = useToastStore();
+
+  const handleLogin = async(email: string, password: string) => {
+    const msg = await LocalLogin(email, password)
+    showToast(msg)
+  }
 
   useEffect(() => {
     if (email) setPasswordRenderer(true);
@@ -141,7 +147,7 @@ const Signin: React.FC<Props> = ({ onArrowClick, handleSignup }) => {
       {password && (
         <TtoDFadeAnimationArea show={loginRenderer}>
           <Area>
-            <LoginButton onClick={() => LocalLogin(email, password)}>
+            <LoginButton onClick={() => handleLogin(email, password)}>
               로그인
             </LoginButton>
           </Area>

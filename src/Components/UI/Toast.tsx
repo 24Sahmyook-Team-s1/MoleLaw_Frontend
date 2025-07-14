@@ -23,6 +23,7 @@ const ToastPopup = styled.div<{ toast: boolean }>`
   align-items: center;
   font-size: 18px;
   font-family: Pretendard;
+  z-index: 100000;
 `;
 
 const Toast: React.FC = () => {

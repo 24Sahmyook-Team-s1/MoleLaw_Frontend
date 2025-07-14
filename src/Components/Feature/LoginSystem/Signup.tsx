@@ -2,9 +2,9 @@ import styled from "@emotion/styled";
 import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { MainColor, Sub, Text } from "../../../style/colors";
 import { useEffect, useState } from "react";
-import { useAuthStore } from "../../../store/storeIndex";
+import { useAuthStore, useToastStore } from "../../../store/storeIndex";
 import { TtoDFadeAnimationArea } from "../../UI/AnimationArea";
-import CustomInput  from "../../UI/InputArea";
+import CustomInput from "../../UI/InputArea";
 
 const Panel = styled.div`
   width: 500px;
@@ -110,6 +110,7 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const { LocalSignUp } = useAuthStore();
+  const { showToast } = useToastStore();
 
   useEffect(() => {
     if (email) setRender1(true);
@@ -134,10 +135,13 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
 
     if (isEmailValid && isPasswordMatch && isTermsAccepted && isPasswordValid)
       try {
-        await LocalSignUp(email, password, nickname);
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        const msg = await LocalSignUp(email, password, nickname);
+        showToast(msg);
+        if (msg === "가입 성공") {
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
+        }
       } catch (error) {
         console.error("회원가입 실패: ", error);
       }
@@ -158,11 +162,11 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
       </button>
       <SigninTitle>회원가입</SigninTitle>
       <Area>
-            <CustomInput
-              inputType={"email"}
-              inputName={"이메일"}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+        <CustomInput
+          inputType={"email"}
+          inputName={"이메일"}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </Area>
       {email && (
         <TtoDFadeAnimationArea show={render1}>
@@ -181,7 +185,7 @@ const Signup: React.FC<props> = ({ handleSignin, terms }) => {
             <CustomInput
               inputType={showPassword ? "text" : "password"}
               inputName={"비밀번호"}
-              Icon={ showPassword ? FaEye : FaEyeSlash}
+              Icon={showPassword ? FaEye : FaEyeSlash}
               onChange={(e) => setPassword(e.target.value)}
               IconJob={() => setShowPassword((prev) => !prev)}
             />
