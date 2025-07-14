@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
 import Background from "../Components/Layout/Background";
 import SideBar from "../Components/Layout/SideBar";
-import ChattingBar from "../Components/Features/ChattingSystem/ChattingBar";
+import ChattingBar from "../Components/Feature/ChattingSystem/ChattingBar";
 import { useEffect, useRef } from "react";
 import { Text } from "../style/colors";
-import ChatBubble from "../Components/Features/ChattingSystem/ChatBubble";
+import ChatBubble from "../Components/Feature/ChattingSystem/ChatBubble";
 import {
   useAuthStore,
   useDataStore,
@@ -12,7 +12,7 @@ import {
   useQuestionStore,
 } from "../store/storeIndex"
 import ReactMarkDown, { type Components } from "react-markdown";
-import InfoBubble from "../Components/Features/ChattingSystem/InfoBubble";
+import InfoBubble from "../Components/Feature/ChattingSystem/InfoBubble";
 import { keyframes } from "@emotion/react";
 import Toast from "../Components/UI/Toast";
 

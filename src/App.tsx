@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import Router from './routes'
 import { useEffect, useState, type ReactNode } from 'react'
 import { useAuthStore } from "./store/storeIndex"
-import LoginPanel from './Components/Features/LoginSystem/LoginPanel'
+import LoginPanel from './Components/Feature/LoginSystem/LoginPanel'
 
 interface props{
   children : ReactNode;
