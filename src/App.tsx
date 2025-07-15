@@ -12,21 +12,43 @@ interface props{
 }
 
 const ProtectedRoute:React.FC<props> = ({children}) => {
-  const {isAuthenticated, checkAuthStatus} = useAuthStore();
-  const [isChecking, setIsChecking] = useState(true);
+  const {isAuthenticated, checkAuthStatus, refreshToken, user} = useAuthStore();
+  
+  const [isInitialized, setInitialized] = useState(false);
 
+  //Authentication System
   useEffect(() => {
     const verifyAuth = async () => {
-      await checkAuthStatus();
-      console.log("Checking")
-      setIsChecking(false);
+      try{
+        await checkAuthStatus();
+      }catch{
+        return;
+      } 
+      finally {
+        setInitialized(true);
+      }
     }
-    verifyAuth()
-  }, [checkAuthStatus])
 
-  if(isChecking) {
-    return <div className="flex h-screen items-center justify-center">인증 확인 중...</div>
-  }
+    if(!isInitialized){
+      verifyAuth();
+    }
+  }, [checkAuthStatus,isInitialized])
+
+
+  //Token Refresh System
+  useEffect(() => {
+    if (!user) return;
+
+    refreshToken();
+
+    const intervalID = setInterval(() => {
+      refreshToken();
+    }, 14*60*1000);
+
+    return () => {
+      clearInterval(intervalID);
+    };
+  }, [user, refreshToken]);
 
   if(!isAuthenticated){
     return (

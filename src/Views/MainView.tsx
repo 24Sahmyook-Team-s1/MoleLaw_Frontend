@@ -123,7 +123,7 @@ const MainView: React.FC = () => {
   const { getChatRoom, selectedChatRoomID } = useDataStore();
   const { messages, addMessage } = useMessageStore();
   const { askQuestion, loading, continueQuestion } = useQuestionStore();
-  const { user, refreshToken } = useAuthStore();
+  const { user, isAuthenticated } = useAuthStore();
   const middleRef = useRef<HTMLDivElement>(null);
 
   const markdownComponents: Components = {
@@ -138,8 +138,10 @@ const MainView: React.FC = () => {
   }
 
   useEffect(() => {
-    getChatRoom();
-  }, [getChatRoom]);
+    if(isAuthenticated){
+      getChatRoom();
+    }
+  }, [getChatRoom, isAuthenticated]);
 
   useEffect(() => {
     if (middleRef.current) {
@@ -150,24 +152,8 @@ const MainView: React.FC = () => {
     }
   },[messages])
 
-  useEffect(() => {
-    if (!user) return;
-
-    refreshToken();
-
-    const intervalID = setInterval(() => {
-      refreshToken();
-    }, 14*60*1000);
-
-    return () => {
-      clearInterval(intervalID);
-    };
-  }, [user, refreshToken]);
-
   const handleAsk = useCallback(async (msg: string) => {
     addMessage({ sender: "USER", content: msg });
-
-
     if (selectedChatRoomID) {
       await continueQuestion(msg);
     } else {

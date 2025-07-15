@@ -12,24 +12,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setUser: (user: any) => set({ user }),
 
-  refreshToken: async () => {
-    try {
-      const res = await axios.post(
-        `${API_BASE_URL}/auth/reissue`,
-        {},
-        { withCredentials: true }
-      );
-
-      if (res.status === 200) {
-        return true;
-      }
-      return false;
-    } catch {
-      set({ isAuthenticated: false });
-      return false;
-    }
-  },
-
   //Auth Check
   checkAuthStatus: async () => {
     try {
@@ -52,6 +34,25 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       });
     }
     return false;
+  },
+
+  
+  refreshToken: async () => {
+    try {
+      const res = await axios.post(
+        `${API_BASE_URL}/auth/reissue`,
+        {},
+        { withCredentials: true }
+      );
+
+      if (res.status === 200) {
+        return true;
+      }
+      return false;
+    } catch {
+      set({ isAuthenticated: false });
+      return false;
+    }
   },
 
   LocalSignUp: async (email: string, password: string, nickname: string) => {
