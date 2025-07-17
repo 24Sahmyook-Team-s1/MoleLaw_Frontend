@@ -192,7 +192,6 @@ const SideBar: React.FC = () => {
     event.stopPropagation();
     if (hoverRoomID != null) {
       deleteChatroom(hoverRoomID);
-      window.location.reload();
     } else {
       return false;
     }
